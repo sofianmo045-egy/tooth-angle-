@@ -12,7 +12,7 @@
             --text-gray: #94a3b8;
             --pds-orange: #f59e0b;
             --error-red: #ef4444;
-            --sub-text-gray: #64748b; /* اللون الرصاصي الجديد */
+            --sub-text-gray: #64748b;
         }
 
         body { 
@@ -39,7 +39,7 @@
 
         .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; } /* تعديل اللون هنا */
+        .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; }
         .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .created-by { margin-top: 10px; font-size: 12px; color: #94a3b8; }
         .support-text { display: block; margin-top: 5px; color: #64748b; font-style: italic; font-size: 11px; }
@@ -188,7 +188,7 @@
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a1S">-</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a1U">-</b></div>
             
-            <div class="offset-title">Antenna 2 - Offsets</div>
+            <div class="offset-title">Antenna 2 - Offsets <span class="ref-tag">(Reference point: Boom Pin Center)</span></div>
             <div class="res-line"><span>Forward (Y):</span> <b id="out-a2F">-</b></div>
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">-</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">-</b></div>
@@ -258,9 +258,6 @@
         evt.currentTarget.className += " active";
     }
 
-    // --- MEASUREMENTS SCRIPT ---
-    let reportDataMeasurements = "";
-
     function calcMeasurements() {
         const getV = (id) => { const val = document.getElementById(id).value; return val === "" ? null : parseFloat(val); };
         const d = {
@@ -320,28 +317,26 @@
         document.getElementById('out-boomL').innerText = format(boomL, " m");
         document.getElementById('out-stickL').innerText = format(stickL, " m");
 
-        const now = new Date();
-        reportDataMeasurements = `SURVEY MEASUREMENTS REPORT\nDate: ${now.toLocaleString()}\n` +
-            `------------------------------------------\n` +
-            `Machine Heading: ${format(mH, "°")}\nHeading Correction: ${format(hC, "°")}\n` +
-            `Antenna H-Dist: ${format(antDist, " m")}\n` +
-            `--- Antenna 1 Offsets ---\nForward: ${format(a1.F)}\nStarboard: ${format(a1.S)}\nUp: ${format(a1.U)}\n` +
-            `--- Boom & Stick ---\nBoom Length: ${format(boomL)}\nStick Length: ${format(stickL)}`;
-
         document.getElementById('resultsMeasurements').style.display = "block";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     function exportTxtMeasurements() {
-        if (!reportDataMeasurements) { alert("Please calculate first"); return; }
-        const blob = new Blob([reportDataMeasurements], { type: "text/plain" });
+        const out = (id) => document.getElementById(id).innerText;
+        const now = new Date().toLocaleString();
+        let content = `EXCAVATOR SURVEY REPORT\nDate: ${now}\n--------------------------\n`;
+        content += `Heading: ${out('out-mH')}\nCorrection: ${out('out-hC')}\nAntenna Dist: ${out('out-antDist')}\n`;
+        content += `\nANTENNA 1 OFFSETS:\nForward: ${out('out-a1F')}\nStarboard: ${out('out-a1S')}\nUp: ${out('out-a1U')}\n`;
+        content += `\nANTENNA 2 OFFSETS:\nForward: ${out('out-a2F')}\nStarboard: ${out('out-a2S')}\nUp: ${out('out-a2U')}\n`;
+        content += `\nLengths:\nBoom: ${out('out-boomL')}\nStick: ${out('out-stickL')}`;
+        
+        const blob = new Blob([content], { type: "text/plain" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `Survey_Measurements_Report.txt`;
+        link.download = `Survey_Report.txt`;
         link.click();
     }
 
-    // --- BUCKET CONFIG (Calibration) SCRIPT ---
     function dist3D(p1, p2) { if (!p1 || !p2) return null; return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2)); }
     function getP(id_p) { const x = document.getElementById('x_'+id_p).value, y = document.getElementById('y_'+id_p).value, z = document.getElementById('z_'+id_p).value; if (x === "" || y === "" || z === "") return null; return { x: parseFloat(x), y: parseFloat(y), z: parseFloat(z) }; }
     function formatRes(val, unit = " m") { if (val === null || isNaN(val)) return '<span style="color:#ef4444;font-size:12px">Missing Input</span>'; return val.toFixed(3) + unit; }
@@ -378,8 +373,8 @@
     }
 
     function downloadReportCalibration() {
-        const now = new Date();
-        let content = `EXCAVATOR BUCKET CONFIG REPORT\nDate: ${now.toLocaleString()}\nCreated by: Mohamed Shehata\n------------------------------------------\n`;
+        const now = new Date().toLocaleString();
+        let content = `EXCAVATOR BUCKET CONFIG REPORT\nDate: ${now}\nCreated by: Mohamed Shehata\n--------------------------\n`;
         ["s2", "s3", "s4", "s5", "ts", "t1", "t6"].forEach(id => {
             const el = document.getElementById('out-'+id);
             if(el) {
