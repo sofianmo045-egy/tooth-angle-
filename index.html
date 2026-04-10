@@ -1,163 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excavator Calculator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EX. Measurements & PDS Tools</title>
     <style>
-        body { background-color: #f3f4f6; font-family: sans-serif; }
-        .input-card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
-        .section-title { color: #d97706; font-weight: bold; border-left: 4px solid #d97706; padding-left: 0.5rem; margin-bottom: 1rem; text-transform: uppercase; }
-        label { display: block; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.25rem; }
-        input { width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.5rem; margin-bottom: 1rem; }
-        .result-row { border-bottom: 1px solid #374151; padding: 0.5rem 0; display: flex; justify-content: space-between; }
+        :root {
+            --primary-bg: #0f172a;
+            --accent-blue: #38bdf8;
+            --success-green: #059669;
+            --text-gray: #94a3b8;
+            --pds-orange: #f59e0b;
+        }
+
+        body { background-color: #f1f5f9; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 20px 10px; font-family: 'Segoe UI', sans-serif; margin: 0; box-sizing: border-box; }
+        .card { max-width: 500px; width: 100%; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 18px; }
+        
+        .group { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; }
+        .group-title { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .pds-title { color: var(--pds-orange); border-left: 3px solid var(--pds-orange); padding-left: 8px; }
+        
+        .input-row { display: flex; gap: 12px; margin-bottom: 10px; }
+        .input-col { flex: 1; }
+        .input-col label { font-size: 10px; color: #64748b; font-weight: 600; display: block; margin-bottom: 4px; }
+        .input-col input { width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; box-sizing: border-box; }
+
+        .calc-btn { width: calc(100% - 40px); margin: 20px; padding: 16px; background: var(--success-green); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+
+        .results-area { background: var(--primary-bg); color: #f8fafc; padding: 25px 20px; display: none; }
+        .res-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 5px; }
+        .res-line b { color: #fff; }
+        .pds-res { color: var(--pds-orange) !important; }
+
+        .footer { padding: 25px; font-size: 11px; color: #64748b; text-align: center; background: #fafafa; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
-    <div class="max-w-4xl mx-auto">
-        <header class="text-center mb-8 bg-[#1e293b] text-white py-6 rounded-lg shadow-lg">
-            <h1 class="text-2xl font-bold">Excavator Calculator</h1>
-            <p class="text-sm opacity-80">Measurements and Calibration Tool</p>
-        </header>
-
-        <div class="input-card flex justify-center">
-            <img src="excavator-diagram.png" alt="Excavator Diagram" class="max-w-full h-auto rounded">
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">Antennas (1 & 2)</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>X1</label><input type="number" id="x1" value="1000"></div>
-                <div><label>Y1</label><input type="number" id="y1" value="1000"></div>
-                <div><label>Z1</label><input type="number" id="z1" value="10"></div>
-                <div><label>X2</label><input type="number" id="x2" value="1005"></div>
-                <div><label>Y2</label><input type="number" id="y2" value="1000.5"></div>
-                <div><label>Z2</label><input type="number" id="z2" value="10"></div>
-            </div>
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">Boom Pins (STB & PORT)</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>Xs (STB)</label><input type="number" id="xs" value="1003"></div>
-                <div><label>Ys (STB)</label><input type="number" id="ys" value="1008"></div>
-                <div><label>Zs (STB)</label><input type="number" id="zs" value="7.5"></div>
-                <div><label>Xp (PORT)</label><input type="number" id="xp" value="1002"></div>
-                <div><label>Yp (PORT)</label><input type="number" id="yp" value="1008"></div>
-                <div><label>Zp (PORT)</label><input type="number" id="zp" value="7.5"></div>
-            </div>
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">Stick & Bucket Pins</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>Stick Pin X</label><input type="number" id="spx" value="1003"></div>
-                <div><label>Stick Pin Y</label><input type="number" id="spy" value="1015"></div>
-                <div><label>Stick Pin Z</label><input type="number" id="spz" value="15"></div>
-                <div><label>Bucket Pin X</label><input type="number" id="bpx" value="1003"></div>
-                <div><label>Bucket Pin Y</label><input type="number" id="bpy" value="1022"></div>
-                <div><label>Bucket Pin Z</label><input type="number" id="bpz" value="4"></div>
-            </div>
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">Bucket Center</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>Xb</label><input type="number" id="xb" value="1002.5"></div>
-                <div><label>Yb</label><input type="number" id="yb" value="1021"></div>
-                <div><label>Zb</label><input type="number" id="zb" value="2"></div>
-            </div>
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">S3 Pin</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>S3 Pin X</label><input type="number" id="s3px" value="1003"></div>
-                <div><label>S3 Pin Y</label><input type="number" id="s3py" value="1021.5"></div>
-                <div><label>S3 Pin Z</label><input type="number" id="s3pz" value="4.6"></div>
-            </div>
-        </div>
-
-        <div class="input-card">
-            <h2 class="section-title">Tooth Angle Inputs</h2>
-            <div class="grid grid-cols-3 gap-4">
-                <div><label>T1 (Side 1)</label><input type="number" id="t1" value="1.99"></div>
-                <div><label>T5 (Side 2)</label><input type="number" id="t5" value="0.575"></div>
-                <div><label>T1S (Side 3)</label><input type="number" id="t1s" value="2.02"></div>
-            </div>
-        </div>
-
-        <button onclick="calculate()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-lg shadow-lg transition-all mb-8 uppercase">
-            Calculate Results
-        </button>
-
-        <div id="results-area" class="hidden bg-[#0f172a] text-white p-6 rounded-lg shadow-xl mb-8">
-            <h2 class="text-orange-400 font-bold mb-4 border-b border-orange-400 pb-2 uppercase">Calculation Results</h2>
-            
-            <div class="result-row"><span>Machine Heading:</span> <span id="res-heading">0.000°</span></div>
-            <div class="result-row"><span>Heading Correction:</span> <span id="res-corr">-84.289°</span></div>
-            <div class="result-row"><span>Antenna H-Distance:</span> <span id="res-hdist">5.025 m</span></div>
-            
-            <div class="mt-6 mb-2 text-emerald-400 font-semibold italic">Antenna 1 - Offsets From Boom Pin Center</div>
-            <div class="result-row"><span>Forward (Y):</span> <span id="a1-y">-8.000 m</span></div>
-            <div class="result-row"><span>Starboard (X):</span> <span id="a1-x">-2.500 m</span></div>
-            <div class="result-row"><span>Up (Z):</span> <span id="a1-z">2.500 m</span></div>
-
-            <div class="mt-6 mb-2 text-emerald-400 font-semibold italic">Antenna 2 - Offsets From Boom Pin Center</div>
-            <div class="result-row"><span>Forward (Y):</span> <span id="a2-y">-7.500 m</span></div>
-            <div class="result-row"><span>Starboard (X):</span> <span id="a2-x">2.500 m</span></div>
-            <div class="result-row"><span>Up (Z):</span> <span id="a2-z">2.500 m</span></div>
-
-            <div class="mt-6"></div>
-            <div class="result-row"><span>Boom Length:</span> <span id="res-boom">10.271 m</span></div>
-            <div class="result-row"><span>Stick Length (S1):</span> <span id="res-stick">13.038 m</span></div>
-            <div class="result-row"><span>Stick Hor. Offset (S3):</span> <span id="res-s3">0.100 m</span></div>
-            <div class="result-row"><span>Tooth Angle (T6):</span> <span id="res-t6">84.727°</span></div>
-
-            <button onclick="exportTxt()" class="w-full mt-6 border border-white py-2 rounded hover:bg-white hover:text-black transition-all">
-                Export Results (.txt)
-            </button>
-        </div>
-
-        <footer class="text-center text-gray-500 text-sm py-4 border-t">
-            <p class="font-bold mb-2">Install as Mobile App</p>
-            <p>iOS: Share &rarr; Add to Home Screen</p>
-            <p>Android: Menu &rarr; Add to Home screen</p>
-        </footer>
+<div class="card">
+    <div class="header">
+        <h1>EX. Measurements & PDS Geometry</h1>
+        <p>Surveying & Calibration Tool</p>
     </div>
 
-    <script>
-        function calculate() {
-            // Logic for calculation remains the same, updates the DOM
-            document.getElementById('results-area').classList.remove('hidden');
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    <div class="group">
+        <span class="group-title pds-title">PDS Stick S3 (Perpendicular Offset)</span>
+        <div class="input-row">
+            <div class="input-col"><label>Stick Pin X</label><input type="number" id="Xst" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>Stick Pin Y</label><input type="number" id="Yst" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>Stick Pin Z</label><input type="number" id="Zst" step="0.001" placeholder="0.000"></div>
+        </div>
+        <div class="input-row">
+            <div class="input-col"><label>Bucket Pin X</label><input type="number" id="Xbs" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>Bucket Pin Y</label><input type="number" id="Ybs" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>Bucket Pin Z</label><input type="number" id="Zbs" step="0.001" placeholder="0.000"></div>
+        </div>
+        <div class="input-row" style="background: #fff9f0; padding: 10px; border-radius: 8px;">
+            <div class="input-col"><label>S3 Pin Point X</label><input type="number" id="S3x" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>S3 Pin Point Y</label><input type="number" id="S3y" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>S3 Pin Point Z</label><input type="number" id="S3z" step="0.001" placeholder="0.000"></div>
+        </div>
+    </div>
+
+    <div class="group">
+        <span class="group-title pds-title">PDS Bucket T6 (Angle)</span>
+        <div class="input-row">
+            <div class="input-col"><label>T1 (Side 1)</label><input type="number" id="T1" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>T5 (Side 2)</label><input type="number" id="T5" step="0.001" placeholder="0.000"></div>
+            <div class="input-col"><label>T1S (Side 3)</label><input type="number" id="T1S" step="0.001" placeholder="0.000"></div>
+        </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">Calculate All Results</button>
+
+    <div id="resultsArea" class="results-area">
+        <div style="color: var(--pds-orange); font-weight: bold; border-bottom: 1px solid #334155; padding-bottom: 5px;">PDS RESULTS</div>
+        <div class="res-line"><span>Stick Length (S1):</span> <b id="out-S1">0.000 m</b></div>
+        <div class="res-line"><span>Stick Offset (S3):</span> <b id="out-S3" class="pds-res">0.000 m</b></div>
+        <div class="res-line"><span>Tooth Angle (T6):</span> <b id="out-T6" class="pds-res">0.000°</b></div>
+    </div>
+
+    <div class="footer">Created by Mohamed Shehata - NMDC</div>
+</div>
+
+<script>
+    function calculate() {
+        const getV = (id) => parseFloat(document.getElementById(id).value) || 0;
+
+        // إحداثيات النقاط
+        const A = { x: getV('Xst'), y: getV('Yst'), z: getV('Zst') }; // Stick Pin
+        const B = { x: getV('Xbs'), y: getV('Ybs'), z: getV('Zbs') }; // Bucket Pin
+        const P = { x: getV('S3x'), y: getV('S3y'), z: getV('S3z') }; // S3 Pin Point
+
+        // 1. حساب طول الـ Stick (S1)
+        const S1 = Math.sqrt(Math.pow(B.x - A.x, 2) + Math.pow(B.y - A.y, 2) + Math.pow(B.z - A.z, 2));
+
+        // 2. حساب المسافة العمودية S3 (Point-to-Line Distance in 3D)
+        // Equation: d = |(P-A) x (P-B)| / |B-A|
+        let S3 = 0;
+        if (S1 > 0) {
+            const PA = { x: P.x - A.x, y: P.y - A.y, z: P.z - A.z };
+            const PB = { x: P.x - B.x, y: P.y - B.y, z: P.z - B.z };
+            const AB = { x: B.x - A.x, y: B.y - A.y, z: B.z - A.z };
+
+            // Cross Product (PA x PB)
+            const CP = {
+                x: PA.y * PB.z - PA.z * PB.y,
+                y: PA.z * PB.x - PA.x * PB.z,
+                z: PA.x * PB.y - PA.y * PB.x
+            };
+
+            const CP_Mag = Math.sqrt(Math.pow(CP.x, 2) + Math.pow(CP.y, 2) + Math.pow(CP.z, 2));
+            S3 = CP_Mag / S1;
         }
 
-        function exportTxt() {
-            const h = document.getElementById('res-heading').innerText;
-            const s1 = document.getElementById('res-stick').innerText;
-            const t6 = document.getElementById('res-t6').innerText;
-
-            let content = `EXCAVATOR CALIBRATION REPORT\n`;
-            content += `====================================\n`;
-            content += `Machine Heading: ${h}\n`;
-            content += `Stick Length (S1): ${s1}\n`;
-            content += `Tooth Angle (T6): ${t6}\n\n`;
-            content += `ANTENNA 1 OFFSETS (From Boom Pin):\n`;
-            content += `Fwd: ${document.getElementById('a1-y').innerText}, Stb: ${document.getElementById('a1-x').innerText}, Up: ${document.getElementById('a1-z').innerText}\n\n`;
-            content += `ANTENNA 2 OFFSETS (From Boom Pin):\n`;
-            content += `Fwd: ${document.getElementById('a2-y').innerText}, Stb: ${document.getElementById('a2-x').innerText}, Up: ${document.getElementById('a2-z').innerText}\n`;
-            content += `====================================\n`;
-            content += `Generated on: ${new Date().toLocaleString()}`;
-
-            const blob = new Blob([content], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Excavator_Calibration_Report.txt`;
-            link.click();
+        // 3. حساب T6 (Bucket Angle)
+        const T1 = getV('T1'), T5 = getV('T5'), T1S = getV('T1S');
+        let T6 = 0;
+        if (T1 > 0 && T5 > 0 && T1S > 0) {
+            const cosT6 = (Math.pow(T1, 2) + Math.pow(T5, 2) - Math.pow(T1S, 2)) / (2 * T1 * T5);
+            if (cosT6 >= -1 && cosT6 <= 1) T6 = Math.acos(cosT6) * (180 / Math.PI);
         }
-    </script>
+
+        // عرض النتائج
+        document.getElementById('out-S1').innerText = S1.toFixed(3) + " m";
+        document.getElementById('out-S3').innerText = S3.toFixed(3) + " m";
+        document.getElementById('out-T6').innerText = T6.toFixed(3) + "°";
+        document.getElementById('resultsArea').style.display = "block";
+    }
+</script>
 </body>
 </html>
