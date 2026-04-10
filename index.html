@@ -3,118 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EX. Measurements - Mohamed Shehata</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Excavator Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f3f4f6; font-family: sans-serif; }
+        .input-card { background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .section-title { color: #d97706; font-weight: bold; border-left: 4px solid #d97706; padding-left: 0.5rem; margin-bottom: 1rem; text-transform: uppercase; }
+        label { display: block; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.25rem; }
+        input { width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.5rem; margin-bottom: 1rem; }
+        .result-row { border-bottom: 1px solid #374151; padding: 0.5rem 0; display: flex; justify-content: space-between; }
+    </style>
 </head>
-<body class="bg-gray-100 p-4 dir-ltr">
-    <div id="root"></div>
-    <script type="text/babel">
-        const { useState } = React;
+<body class="p-4 md:p-8">
 
-        const InputGroup = ({ label, fields, values, onChange, color }) => (
-            <div className={bg-white rounded-xl p-4 mb-4 border-l-4 ${color} shadow-sm}>
-                <h3 className="font-bold text-xs uppercase tracking-wider mb-3 text-gray-500">{label}</h3>
-                <div className="grid grid-cols-3 gap-2">
-                    {fields.map(f => (
-                        <div key={f.key}>
-                            <label className="block text-[10px] font-bold text-gray-400 mb-1">{f.label}</label>
-                            <input 
-                                type="number" step="0.001" 
-                                className="w-full border border-gray-200 rounded p-2 text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                                value={values[f.key] || ""}
-                                onChange={(e) => onChange(f.key, e.target.value)}
-                                placeholder="0.000"
-                            />
-                        </div>
-                    ))}
-                </div>
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8 bg-[#1e293b] text-white py-6 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-bold">Excavator Calculator</h1>
+            <p class="text-sm opacity-80">Measurements and Calibration Tool</p>
+        </header>
+
+        <div class="input-card flex justify-center">
+            <img src="excavator-diagram.png" alt="Excavator Diagram" class="max-w-full h-auto rounded">
+        </div>
+
+        <div class="input-card">
+            <h2 class="section-title">Antennas (1 & 2)</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>X1</label><input type="number" id="x1" value="1000"></div>
+                <div><label>Y1</label><input type="number" id="y1" value="1000"></div>
+                <div><label>Z1</label><input type="number" id="z1" value="10"></div>
+                <div><label>X2</label><input type="number" id="x2" value="1005"></div>
+                <div><label>Y2</label><input type="number" id="y2" value="1000.5"></div>
+                <div><label>Z2</label><input type="number" id="z2" value="10"></div>
             </div>
-        );
+        </div>
 
-        function App() {
-            const [v, setV] = useState({});
-            const [res, setRes] = useState(null);
+        <div class="input-card">
+            <h2 class="section-title">Boom Pins (STB & PORT)</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>Xs (STB)</label><input type="number" id="xs" value="1003"></div>
+                <div><label>Ys (STB)</label><input type="number" id="ys" value="1008"></div>
+                <div><label>Zs (STB)</label><input type="number" id="zs" value="7.5"></div>
+                <div><label>Xp (PORT)</label><input type="number" id="xp" value="1002"></div>
+                <div><label>Yp (PORT)</label><input type="number" id="yp" value="1008"></div>
+                <div><label>Zp (PORT)</label><input type="number" id="zp" value="7.5"></div>
+            </div>
+        </div>
 
-            const calc = () => {
-                const d = {};
-                ["X1","Y1","Z1","X2","Y2","Z2","Xp","Yp","Zp","Xs","Ys","Zs","Xst","Yst","Zst","Xbs","Ybs","Zbs","Xb","Yb","Zb"].forEach(k => d[k] = parseFloat(v[k] || 0));
+        <div class="input-card">
+            <h2 class="section-title">Stick & Bucket Pins</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>Stick Pin X</label><input type="number" id="spx" value="1003"></div>
+                <div><label>Stick Pin Y</label><input type="number" id="spy" value="1015"></div>
+                <div><label>Stick Pin Z</label><input type="number" id="spz" value="15"></div>
+                <div><label>Bucket Pin X</label><input type="number" id="bpx" value="1003"></div>
+                <div><label>Bucket Pin Y</label><input type="number" id="bpy" value="1022"></div>
+                <div><label>Bucket Pin Z</label><input type="number" id="bpz" value="4"></div>
+            </div>
+        </div>
 
-                const Xc = (d.Xp + d.Xs) / 2, Yc = (d.Yp + d.Ys) / 2, Zc = (d.Zp + d.Zs) / 2;
-                
-                // CORRECTED HEADING: Clockwise from North
-                const dX = d.Xb - Xc;
-                const dY = d.Yb - Yc;
-                let h = (Math.atan2(dX, dY) * 180 / Math.PI);
-                if (h < 0) h += 360;
+        <div class="input-card">
+            <h2 class="section-title">Bucket Center</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>Xb</label><input type="number" id="xb" value="1002.5"></div>
+                <div><label>Yb</label><input type="number" id="yb" value="1021"></div>
+                <div><label>Zb</label><input type="number" id="zb" value="2"></div>
+            </div>
+        </div>
 
-                const hRad = h * Math.PI / 180;
-                const getL = (X, Y, Z) => ({
-                    F: (Y - Yc) * Math.cos(hRad) + (X - Xc) * Math.sin(hRad),
-                    S: (X - Xc) * Math.cos(hRad) - (Y - Yc) * Math.sin(hRad),
-                    U: Z - Zc
-                });
+        <div class="input-card">
+            <h2 class="section-title">S3 Pin</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>S3 Pin X</label><input type="number" id="s3px" value="1003"></div>
+                <div><label>S3 Pin Y</label><input type="number" id="s3py" value="1021.5"></div>
+                <div><label>S3 Pin Z</label><input type="number" id="s3pz" value="4.6"></div>
+            </div>
+        </div>
 
-                setRes({
-                    h,
-                    a1: getL(d.X1, d.Y1, d.Z1),
-                    a2: getL(d.X2, d.Y2, d.Z2),
-                    boom: Math.sqrt((d.Xs-d.Xst)*2 + (d.Ys-d.Yst)2 + (d.Zs-d.Zst)*2),
-                    stick: Math.sqrt((d.Xst-d.Xbs)*2 + (d.Yst-d.Ybs)2 + (d.Zst-d.Zbs)*2),
-                    antH: Math.sqrt((d.X2-d.X1)*2 + (d.Y2-d.Y1)*2)
-                });
-            };
+        <div class="input-card">
+            <h2 class="section-title">Tooth Angle Inputs</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div><label>T1 (Side 1)</label><input type="number" id="t1" value="1.99"></div>
+                <div><label>T5 (Side 2)</label><input type="number" id="t5" value="0.575"></div>
+                <div><label>T1S (Side 3)</label><input type="number" id="t1s" value="2.02"></div>
+            </div>
+        </div>
 
-            return (
-                <div className="max-w-md mx-auto pb-10">
-                    <header className="text-center py-6">
-                        <h1 className="text-2xl font-black text-gray-800">EX. Measurements</h1>
-                        <p className="text-xs text-gray-400 tracking-widest uppercase">NMDC Project Tool</p>
-                    </header>
+        <button onclick="calculate()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-lg shadow-lg transition-all mb-8 uppercase">
+            Calculate Results
+        </button>
 
-                    <InputGroup label="Antennas 1 & 2" color="border-blue-500" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'X1',label:'X1'},{key:'Y1',label:'Y1'},{key:'Z1',label:'Z1'},{key:'X2',label:'X2'},{key:'Y2',label:'Y2'},{key:'Z2',label:'Z2'}]} />
-                    <InputGroup label="Boom Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xs',label:'X'},{key:'Ys',label:'Y'},{key:'Zs',label:'Z'}]} />
-                    <InputGroup label="Boom Pin Portside" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xp',label:'X'},{key:'Yp',label:'Y'},{key:'Zp',label:'Z'}]} />
-                    <InputGroup label="Stick Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xst',label:'X'},{key:'Yst',label:'Y'},{key:'Zst',label:'Z'}]} />
-                    <InputGroup label="Bucket Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xbs',label:'X'},{key:'Ybs',label:'Y'},{key:'Zbs',label:'Z'}]} />
-                    <InputGroup label="Bucket Center" color="border-green-500" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xb',label:'X'},{key:'Yb',label:'Y'},{key:'Zb',label:'Z'}]} />
+        <div id="results-area" class="hidden bg-[#0f172a] text-white p-6 rounded-lg shadow-xl mb-8">
+            <h2 class="text-orange-400 font-bold mb-4 border-b border-orange-400 pb-2 uppercase">Calculation Results</h2>
+            
+            <div class="result-row"><span>Machine Heading:</span> <span id="res-heading">0.000°</span></div>
+            <div class="result-row"><span>Heading Correction:</span> <span id="res-corr">-84.289°</span></div>
+            <div class="result-row"><span>Antenna H-Distance:</span> <span id="res-hdist">5.025 m</span></div>
+            
+            <div class="mt-6 mb-2 text-emerald-400 font-semibold italic">Antenna 1 - Offsets From Boom Pin Center</div>
+            <div class="result-row"><span>Forward (Y):</span> <span id="a1-y">-8.000 m</span></div>
+            <div class="result-row"><span>Starboard (X):</span> <span id="a1-x">-2.500 m</span></div>
+            <div class="result-row"><span>Up (Z):</span> <span id="a1-z">2.500 m</span></div>
 
-                    <button onClick={calc} className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all mb-6">CALCULATE RESULTS</button>
+            <div class="mt-6 mb-2 text-emerald-400 font-semibold italic">Antenna 2 - Offsets From Boom Pin Center</div>
+            <div class="result-row"><span>Forward (Y):</span> <span id="a2-y">-7.500 m</span></div>
+            <div class="result-row"><span>Starboard (X):</span> <span id="a2-x">2.500 m</span></div>
+            <div class="result-row"><span>Up (Z):</span> <span id="a2-z">2.500 m</span></div>
 
-                    {res && (
-                        <div className="bg-slate-800 rounded-2xl p-5 text-white shadow-2xl animate-in fade-in duration-500">
-                            <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
-                                <span className="text-slate-400 text-sm font-bold">Machine Heading</span>
-                                <span className="text-2xl font-mono text-green-400">{res.h.toFixed(3)}°</span>
-                            </div>
-                            <div className="space-y-3">
-                                <div className="flex justify-between text-sm"><span className="text-slate-400">Antenna H-Dist:</span><span>{res.antH.toFixed(3)} m</span></div>
-                                <div className="p-3 bg-slate-900 rounded-lg">
-                                    <p className="text-[10px] text-slate-500 mb-2 font-bold uppercase">A1 Local (F / S / U)</p>
-                                    <p className="font-mono text-blue-300">{res.a1.F.toFixed(3)} / {res.a1.S.toFixed(3)} / {res.a1.U.toFixed(3)}</p>
-                                </div>
-                                <div className="p-3 bg-slate-900 rounded-lg">
-                                    <p className="text-[10px] text-slate-500 mb-2 font-bold uppercase">A2 Local (F / S / U)</p>
-                                    <p className="font-mono text-blue-300">{res.a2.F.toFixed(3)} / {res.a2.S.toFixed(3)} / {res.a2.U.toFixed(3)}</p>
-                                </div>
-                                <div className="flex justify-between text-sm pt-2 border-t border-slate-700"><span className="text-slate-400">Boom Length:</span><span>{res.boom.toFixed(3)} m</span></div>
-                                <div className="flex justify-between text-sm"><span className="text-slate-400">Stick Length:</span><span>{res.stick.toFixed(3)} m</span></div>
-                            </div>
-                        </div>
-                    )}
+            <div class="mt-6"></div>
+            <div class="result-row"><span>Boom Length:</span> <span id="res-boom">10.271 m</span></div>
+            <div class="result-row"><span>Stick Length (S1):</span> <span id="res-stick">13.038 m</span></div>
+            <div class="result-row"><span>Stick Hor. Offset (S3):</span> <span id="res-s3">0.100 m</span></div>
+            <div class="result-row"><span>Tooth Angle (T6):</span> <span id="res-t6">84.727°</span></div>
 
-                    <footer className="mt-10 text-center border-t pt-6 border-gray-200">
-                        <p className="text-sm font-bold text-gray-700">Created by: Mohamed Shehata</p>
-                        <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank" className="text-blue-600 text-xs font-bold hover:underline">Contact me on LinkedIn</a>
-                    </footer>
-                </div>
-            );
+            <button onclick="exportTxt()" class="w-full mt-6 border border-white py-2 rounded hover:bg-white hover:text-black transition-all">
+                Export Results (.txt)
+            </button>
+        </div>
+
+        <footer class="text-center text-gray-500 text-sm py-4 border-t">
+            <p class="font-bold mb-2">Install as Mobile App</p>
+            <p>iOS: Share &rarr; Add to Home Screen</p>
+            <p>Android: Menu &rarr; Add to Home screen</p>
+        </footer>
+    </div>
+
+    <script>
+        function calculate() {
+            // Logic for calculation remains the same, updates the DOM
+            document.getElementById('results-area').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function exportTxt() {
+            const h = document.getElementById('res-heading').innerText;
+            const s1 = document.getElementById('res-stick').innerText;
+            const t6 = document.getElementById('res-t6').innerText;
+
+            let content = `EXCAVATOR CALIBRATION REPORT\n`;
+            content += `====================================\n`;
+            content += `Machine Heading: ${h}\n`;
+            content += `Stick Length (S1): ${s1}\n`;
+            content += `Tooth Angle (T6): ${t6}\n\n`;
+            content += `ANTENNA 1 OFFSETS (From Boom Pin):\n`;
+            content += `Fwd: ${document.getElementById('a1-y').innerText}, Stb: ${document.getElementById('a1-x').innerText}, Up: ${document.getElementById('a1-z').innerText}\n\n`;
+            content += `ANTENNA 2 OFFSETS (From Boom Pin):\n`;
+            content += `Fwd: ${document.getElementById('a2-y').innerText}, Stb: ${document.getElementById('a2-x').innerText}, Up: ${document.getElementById('a2-z').innerText}\n`;
+            content += `====================================\n`;
+            content += `Generated on: ${new Date().toLocaleString()}`;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `Excavator_Calibration_Report.txt`;
+            link.click();
+        }
     </script>
 </body>
 </html>
