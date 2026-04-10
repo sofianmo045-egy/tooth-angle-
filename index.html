@@ -37,14 +37,15 @@
         }
 
         .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
-        .header h1 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0; font-size: 13px; color: var(--accent-blue); }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .header p { margin: 5px 0 0; font-size: 14px; color: var(--accent-blue); font-weight: 500; }
         .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
-        .created-by { margin-top: 10px; font-size: 11px; color: #94a3b8; }
+        .created-by { margin-top: 10px; font-size: 12px; color: #94a3b8; }
+        .support-text { display: block; margin-top: 5px; color: #64748b; font-style: italic; font-size: 11px; }
 
         .tabs { display: flex; background: #1e293b; border-bottom: 2px solid #334155; }
         .tab-btn { 
-            flex: 1; padding: 12px 5px; text-align: center; color: var(--text-gray); 
+            flex: 1; padding: 15px 5px; text-align: center; color: var(--text-gray); 
             background: none; border: none; font-weight: bold; cursor: pointer; 
             transition: 0.3s; font-size: 12px; text-transform: uppercase;
         }
@@ -94,9 +95,12 @@
 
 <div class="card">
     <div class="header">
-        <h1>Excavator Tools</h1>
-        <p>Surveying & Calibration Hub</p>
-        <div class="created-by">Created by: <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank">Mohamed Shehata</a></div>
+        <h1>Excavator Geometry</h1>
+        <p>Calculator and Calibration Assistant</p>
+        <div class="created-by">
+            Created by: <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank">Mohamed Shehata</a>
+            <span class="support-text">Get in touch for support</span>
+        </div>
     </div>
 
     <div class="tabs">
@@ -255,6 +259,7 @@
 
     // --- MEASUREMENTS SCRIPT ---
     let reportDataMeasurements = "";
+
     function calcMeasurements() {
         const getV = (id) => { const val = document.getElementById(id).value; return val === "" ? null : parseFloat(val); };
         const d = {
@@ -263,35 +268,45 @@
             Xst: getV('Xst'), Yst: getV('Yst'), Zst: getV('Zst'), Xbs: getV('Xbs'), Ybs: getV('Ybs'), Zbs: getV('Zbs'),
             Xb: getV('Xb'), Yb: getV('Yb'), Zb: getV('Zb')
         };
-        const format = (val, unit = "") => (val === null || isNaN(val)) ? "no inputs" : val.toFixed(3) + unit;
+        
+        const format = (val, unit = "") => (val === null || isNaN(val)) ? "Missing Data" : val.toFixed(3) + unit;
 
         let mH = null, hC = null, antDist = null, boomL = null, stickL = null;
         let a1 = {F: null, S: null, U: null}, a2 = {F: null, S: null, U: null};
 
-        if (d.Xp !== null && d.Xs !== null && d.Yp !== null && d.Ys !== null && d.Zp !== null && d.Zs !== null) {
+        if (d.Xp !== null && d.Xs !== null) {
             const Xc = (d.Xp + d.Xs) / 2, Yc = (d.Yp + d.Ys) / 2, Zc = (d.Zp + d.Zs) / 2;
+            
             if (d.Xb !== null && d.Yb !== null) {
                 const hR = Math.atan2(d.Xb - Xc, d.Yb - Yc);
                 mH = ((hR * 180) / Math.PI + 360) % 360;
+                
                 const getOffsets = (X, Y, Z) => {
                     if (X === null || Y === null || Z === null) return {F: null, S: null, U: null};
-                    return { F: (Y - Yc) * Math.cos(hR) + (X - Xc) * Math.sin(hR), S: (X - Xc) * Math.cos(hR) - (Y - Yc) * Math.sin(hR), U: Z - Zc };
+                    return { 
+                        F: (Y - Yc) * Math.cos(hR) + (X - Xc) * Math.sin(hR), 
+                        S: (X - Xc) * Math.cos(hR) - (Y - Yc) * Math.sin(hR), 
+                        U: Z - Zc 
+                    };
                 };
+                
                 a1 = getOffsets(d.X1, d.Y1, d.Z1);
                 a2 = getOffsets(d.X2, d.Y2, d.Z2);
-                if (d.X1 !== null && d.Y1 !== null && d.X2 !== null && d.Y2 !== null) {
+                
+                if (d.X1 !== null && d.X2 !== null) {
                     const aH = ((Math.atan2(d.X2 - d.X1, d.Y2 - d.Y1) * 180) / Math.PI + 360) % 360;
                     hC = mH - aH; if (hC > 180) hC -= 360; if (hC < -180) hC += 360;
                     antDist = Math.sqrt((d.X2 - d.X1)**2 + (d.Y2 - d.Y1)**2);
                 }
             }
-            if (d.Xst !== null && d.Yst !== null && d.Zst !== null) {
+            if (d.Xst !== null) {
                 boomL = Math.sqrt((Xc - d.Xst)**2 + (Yc - d.Yst)**2 + (Zc - d.Zst)**2);
-                if (d.Xbs !== null && d.Ybs !== null && d.Zbs !== null) {
+                if (d.Xbs !== null) {
                     stickL = Math.sqrt((d.Xst - d.Xbs)**2 + (d.Yst - d.Ybs)**2 + (d.Zst - d.Zbs)**2);
                 }
             }
         }
+
         document.getElementById('out-mH').innerText = format(mH, "°");
         document.getElementById('out-hC').innerText = format(hC, "°");
         document.getElementById('out-antDist').innerText = format(antDist, " m");
@@ -303,12 +318,21 @@
         document.getElementById('out-a2U').innerText = format(a2.U, " m");
         document.getElementById('out-boomL').innerText = format(boomL, " m");
         document.getElementById('out-stickL').innerText = format(stickL, " m");
+
+        const now = new Date();
+        reportDataMeasurements = `SURVEY MEASUREMENTS REPORT\nDate: ${now.toLocaleString()}\n` +
+            `------------------------------------------\n` +
+            `Machine Heading: ${format(mH, "°")}\nHeading Correction: ${format(hC, "°")}\n` +
+            `Antenna H-Dist: ${format(antDist, " m")}\n` +
+            `--- Antenna 1 Offsets ---\nForward: ${format(a1.F)}\nStarboard: ${format(a1.S)}\nUp: ${format(a1.U)}\n` +
+            `--- Boom & Stick ---\nBoom Length: ${format(boomL)}\nStick Length: ${format(stickL)}`;
+
         document.getElementById('resultsMeasurements').style.display = "block";
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     function exportTxtMeasurements() {
-        if (!reportDataMeasurements) return;
+        if (!reportDataMeasurements) { alert("Please calculate first"); return; }
         const blob = new Blob([reportDataMeasurements], { type: "text/plain" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -319,7 +343,7 @@
     // --- CALIBRATION SCRIPT ---
     function dist3D(p1, p2) { if (!p1 || !p2) return null; return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2)); }
     function getP(id_p) { const x = document.getElementById('x_'+id_p).value, y = document.getElementById('y_'+id_p).value, z = document.getElementById('z_'+id_p).value; if (x === "" || y === "" || z === "") return null; return { x: parseFloat(x), y: parseFloat(y), z: parseFloat(z) }; }
-    function formatRes(val, unit = " m") { if (val === null || isNaN(val)) return '<span style="color:#ef4444;font-weight:normal;font-size:12px">no input</span>'; return val.toFixed(3) + unit; }
+    function formatRes(val, unit = " m") { if (val === null || isNaN(val)) return '<span style="color:#ef4444;font-size:12px">Missing Input</span>'; return val.toFixed(3) + unit; }
 
     function calcCalibration() {
         const ST = getP('st'), BU = getP('bu'), S3 = getP('s3'), S4 = getP('s4'), S5 = getP('s5'), T1 = getP('t1');
@@ -357,8 +381,10 @@
         let content = `EXCAVATOR CALIBRATION REPORT\nDate: ${now.toLocaleString()}\nCreated by: Mohamed Shehata\n------------------------------------------\n`;
         ["s2", "s3", "s4", "s5", "ts", "t1", "t6"].forEach(id => {
             const el = document.getElementById('out-'+id);
-            const label = el.parentElement.querySelector('span').innerText;
-            content += label + " " + el.innerText + "\n";
+            if(el) {
+                const label = el.parentElement.querySelector('span').innerText;
+                content += label + " " + el.innerText + "\n";
+            }
         });
         const blob = new Blob([content], { type: 'text/plain' });
         const link = document.createElement('a');
