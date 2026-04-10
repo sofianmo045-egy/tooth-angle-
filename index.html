@@ -12,6 +12,7 @@
             --text-gray: #94a3b8;
             --pds-orange: #f59e0b;
             --error-red: #ef4444;
+            --sub-text-gray: #64748b; /* اللون الرصاصي الجديد */
         }
 
         body { 
@@ -38,7 +39,7 @@
 
         .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0; font-size: 14px; color: var(--accent-blue); font-weight: 500; }
+        .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; } /* تعديل اللون هنا */
         .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .created-by { margin-top: 10px; font-size: 12px; color: #94a3b8; }
         .support-text { display: block; margin-top: 5px; color: #64748b; font-style: italic; font-size: 11px; }
@@ -84,6 +85,7 @@
         .res-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 5px; }
         .res-line b { color: #fff; }
         .offset-title { color: #10b981; font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 20px 0 10px 0; padding-bottom: 5px; border-bottom: 1px dashed #334155; }
+        .ref-tag { font-size: 9px; color: #94a3b8; text-transform: none; margin-left: 5px; font-weight: normal; }
 
         .export-btn { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); border-radius: 10px; margin-top: 20px; cursor: pointer; font-weight: 800; }
         .report-btn { background: #64748b; color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 20px; }
@@ -105,7 +107,7 @@
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'tab-measurements')">Measurements</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-calibration')">Calibration</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-calibration')">Bucket Config</button>
         <button class="tab-btn" onclick="openTab(event, 'tab-diagram')">Diagram</button>
     </div>
 
@@ -180,14 +182,17 @@
             <div class="res-line"><span>Machine Heading:</span> <b id="out-mH">-</b></div>
             <div class="res-line" style="border-left: 3px solid #fcd34d; padding-left: 10px;"><span style="color: #fcd34d;">Heading Correction:</span> <b id="out-hC" style="color: #fcd34d;">-</b></div>
             <div class="res-line"><span>Antenna H-Distance:</span> <b id="out-antDist">-</b></div>
-            <div class="offset-title">Antenna 1 - Offsets</div>
+            
+            <div class="offset-title">Antenna 1 - Offsets <span class="ref-tag">(Reference point: Boom Pin Center)</span></div>
             <div class="res-line"><span>Forward (Y):</span> <b id="out-a1F">-</b></div>
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a1S">-</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a1U">-</b></div>
+            
             <div class="offset-title">Antenna 2 - Offsets</div>
             <div class="res-line"><span>Forward (Y):</span> <b id="out-a2F">-</b></div>
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">-</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">-</b></div>
+            
             <div class="res-line" style="margin-top: 15px; border-top: 2px solid #1e293b; padding-top: 10px;"><span>Boom Length:</span> <b id="out-boomL">-</b></div>
             <div class="res-line"><span>Stick Length:</span> <b id="out-stickL">-</b></div>
             <button class="export-btn" onclick="exportTxtMeasurements()">Export Results (.txt)</button>
@@ -196,7 +201,6 @@
 
     <div id="tab-calibration" class="tab-content">
         <div class="main-container">
-            <span class="main-title">Enter Calibration Values</span>
             <div class="input-block"><span class="block-label">Stick Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_st" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_st" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_st" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label">Bucket Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bu" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bu" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bu" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label">S3 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s3" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_s3" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_s3" step="0.001"></div></div></div>
@@ -227,9 +231,6 @@
             <div class="diagram-container">
                 <img src="excavator-diagram.png" alt="Excavator Points Reference" onerror="this.src='https://via.placeholder.com/400x300?text=Excavator+Points+Diagram'">
             </div>
-            <p style="font-size: 12px; color: #64748b; line-height: 1.6; padding: 0 10px;">
-                Use this diagram to identify the required points (Antennas, Boom, Stick, Bucket, and Teeth pins) for accurate calculation. Ensure all measurements follow the same coordinate system.
-            </p>
         </div>
     </div>
 
@@ -269,7 +270,7 @@
             Xb: getV('Xb'), Yb: getV('Yb'), Zb: getV('Zb')
         };
         
-        const format = (val, unit = "") => (val === null || isNaN(val)) ? "Missing Data" : val.toFixed(3) + unit;
+        const format = (val, unit = "") => (val === null || isNaN(val)) ? "Missing Input" : val.toFixed(3) + unit;
 
         let mH = null, hC = null, antDist = null, boomL = null, stickL = null;
         let a1 = {F: null, S: null, U: null}, a2 = {F: null, S: null, U: null};
@@ -340,7 +341,7 @@
         link.click();
     }
 
-    // --- CALIBRATION SCRIPT ---
+    // --- BUCKET CONFIG (Calibration) SCRIPT ---
     function dist3D(p1, p2) { if (!p1 || !p2) return null; return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2)); }
     function getP(id_p) { const x = document.getElementById('x_'+id_p).value, y = document.getElementById('y_'+id_p).value, z = document.getElementById('z_'+id_p).value; if (x === "" || y === "" || z === "") return null; return { x: parseFloat(x), y: parseFloat(y), z: parseFloat(z) }; }
     function formatRes(val, unit = " m") { if (val === null || isNaN(val)) return '<span style="color:#ef4444;font-size:12px">Missing Input</span>'; return val.toFixed(3) + unit; }
@@ -378,7 +379,7 @@
 
     function downloadReportCalibration() {
         const now = new Date();
-        let content = `EXCAVATOR CALIBRATION REPORT\nDate: ${now.toLocaleString()}\nCreated by: Mohamed Shehata\n------------------------------------------\n`;
+        let content = `EXCAVATOR BUCKET CONFIG REPORT\nDate: ${now.toLocaleString()}\nCreated by: Mohamed Shehata\n------------------------------------------\n`;
         ["s2", "s3", "s4", "s5", "ts", "t1", "t6"].forEach(id => {
             const el = document.getElementById('out-'+id);
             if(el) {
@@ -389,7 +390,7 @@
         const blob = new Blob([content], { type: 'text/plain' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob); 
-        link.download = 'Excavator_Calibration_Report.txt'; 
+        link.download = 'Bucket_Config_Report.txt'; 
         link.click();
     }
 </script>
