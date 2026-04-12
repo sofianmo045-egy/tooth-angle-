@@ -1,180 +1,282 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excavator 3D Calculator - A4 Report</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Excavator Geometry Pro</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #f1c40f; }
-        body { font-family: sans-serif; background: #f4f7f6; margin: 0; padding: 20px; }
-        
-        .main-layout { display: flex; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: auto; }
-        .controls { flex: 1; min-width: 300px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        
-        /* حاوية العرض الـ 3D */
-        #canvas-container { 
-            flex: 1; min-width: 350px; height: 400px; 
-            background: #333; border-radius: 10px; overflow: hidden; position: relative;
+        :root {
+            --primary-bg: #0f172a;
+            --accent-blue: #38bdf8;
+            --success-green: #059669;
+            --text-gray: #94a3b8;
+            --pds-orange: #f59e0b;
+            --error-red: #ef4444;
+            --sub-text-gray: #64748b;
         }
 
-        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-
-        button { width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; }
-        .btn-calc { background: var(--primary); color: white; }
-        .btn-print { background: #27ae60; color: white; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-        th { background: #eee; }
-
-        /* تنسيقات الطباعة A4 */
-        @media print {
-            @page { size: A4; margin: 10mm; }
-            .no-print, #canvas-container { display: none !important; }
-            body { padding: 0; background: white; }
-            .controls { box-shadow: none; width: 100%; max-width: none; }
+        body { 
+            background-color: #f1f5f9; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            padding: 20px 10px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            box-sizing: border-box;
         }
+
+        .card { 
+            max-width: 550px; 
+            width: 100%; 
+            background: #fff; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; }
+        .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
+
+        .tabs { display: flex; background: #1e293b; border-bottom: 2px solid #334155; }
+        .tab-btn { 
+            flex: 1; padding: 15px 5px; text-align: center; color: var(--text-gray); 
+            background: none; border: none; font-weight: bold; cursor: pointer; 
+            transition: 0.3s; font-size: 12px; text-transform: uppercase;
+        }
+        .tab-btn.active { color: #fff; border-bottom: 3px solid var(--accent-blue); background: var(--primary-bg); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .main-container { padding: 20px; }
+        .group { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; }
+        .group-title { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        
+        .input-block { margin-bottom: 20px; }
+        .block-label { font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block; }
+
+        .input-row { display: flex; gap: 12px; }
+        .input-col { flex: 1; }
+        .input-col label { font-size: 10px; color: #64748b; font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        .input-col input { 
+            width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; 
+            border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; text-align: center;
+        }
+
+        .calc-btn { 
+            width: calc(100% - 40px); margin: 10px 20px 20px 20px; padding: 16px; 
+            background: var(--success-green); color: white; border: none; 
+            border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; 
+        }
+
+        .results-area { background: var(--primary-bg); color: #f8fafc; padding: 25px 20px; display: none; }
+        .res-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 5px; }
+        .res-line b { color: #fff; }
+        
+        .history-btn { background: #334155; color: white; border: none; padding: 10px; border-radius: 8px; width: calc(100% - 40px); margin: 0 20px 10px; cursor: pointer; font-size: 12px; }
+        .clear-btn { background: #fee2e2; color: #ef4444; border: 1px solid #ef4444; padding: 10px; border-radius: 10px; width: calc(100% - 40px); margin: 0 20px 20px; cursor: pointer; font-weight: bold; font-size: 12px; }
+
+        /* History Modal */
+        #historyModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow: auto; }
+        .modal-content { background: #fff; margin: 10% auto; padding: 20px; border-radius: 15px; width: 90%; max-width: 500px; }
+        .history-item { border-bottom: 1px solid #ddd; padding: 10px 0; font-size: 12px; color: #334155; }
     </style>
 </head>
 <body>
 
-<div class="main-layout">
-    <div class="controls">
-        <h2>حاسبة الحفار الذكية</h2>
-        <div class="input-group no-print">
-            <div>
-                <label>East (GPS):</label>
-                <input type="number" id="gpsE" value="100.000" step="0.001">
-            </div>
-            <div>
-                <label>North (GPS):</label>
-                <input type="number" id="gpsN" value="200.000" step="0.001">
-            </div>
-            <div>
-                <label>Height (Z):</label>
-                <input type="number" id="gpsZ" value="10.000" step="0.001">
-            </div>
-            <div>
-                <label>Angle (S1):</label>
-                <input type="number" id="angleS1" value="45" oninput="update3D()">
-            </div>
-            <div>
-                <label>Angle (S2):</label>
-                <input type="number" id="angleS2" value="30" oninput="update3D()">
+<div class="card">
+    <div class="header">
+        <h1>Excavator Geometry</h1>
+        <p>Created by: <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank">Mohamed Shehata</a></p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
+        <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
+    </div>
+
+    <div id="tab-measurements" class="tab-content active">
+        <div class="group" style="background: #f8fbff; margin-top:10px;">
+            <span class="group-title">ANTENNA 1</span>
+            <div class="input-row">
+                <div class="input-col"><label>X1</label><input type="number" step="0.001" id="X1" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Y1</label><input type="number" step="0.001" id="Y1" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Z1</label><input type="number" step="0.001" id="Z1" class="saveable" placeholder="-"></div>
             </div>
         </div>
-
-        <button class="btn-calc no-print" onclick="calculate()">تحديث الحسابات</button>
-        <button class="btn-print no-print" onclick="window.print()">طباعة تقرير A4</button>
-
-        <div id="reportSection">
-            <h3>نتائج النقاط (Report)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>النقطة</th>
-                        <th>East</th>
-                        <th>North</th>
-                        <th>Level</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsBody">
-                    </tbody>
-            </table>
+        <div class="group" style="background: #f8fbff;">
+            <span class="group-title">ANTENNA 2</span>
+            <div class="input-row">
+                <div class="input-col"><label>X2</label><input type="number" step="0.001" id="X2" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Y2</label><input type="number" step="0.001" id="Y2" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Z2</label><input type="number" step="0.001" id="Z2" class="saveable" placeholder="-"></div>
+            </div>
+        </div>
+        <div class="group">
+            <span class="group-title">BOOM PIN STBD</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xs</label><input type="number" id="Xs" class="saveable"></div>
+                <div class="input-col"><label>Ys</label><input type="number" id="Ys" class="saveable"></div>
+                <div class="input-col"><label>Zs</label><input type="number" id="Zs" class="saveable"></div>
+            </div>
+        </div>
+        <div class="group">
+            <span class="group-title">BOOM PIN PORT</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xp</label><input type="number" id="Xp" class="saveable"></div>
+                <div class="input-col"><label>Yp</label><input type="number" id="Yp" class="saveable"></div>
+                <div class="input-col"><label>Zp</label><input type="number" id="Zp" class="saveable"></div>
+            </div>
+        </div>
+        <div class="group">
+            <span class="group-title">BUCKET CENTER</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xb</label><input type="number" id="Xb" class="saveable"></div>
+                <div class="input-col"><label>Yb</label><input type="number" id="Yb" class="saveable"></div>
+                <div class="input-col"><label>Zb</label><input type="number" id="Zb" class="saveable"></div>
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calcMeasurements()">Calculate Geometry</button>
+        <div id="resultsMeasurements" class="results-area">
+            <div class="res-line"><span>Machine Heading:</span> <b id="out-mH">-</b></div>
+            <div class="res-line"><span>Antenna H-Distance:</span> <b id="out-antDist">-</b></div>
         </div>
     </div>
 
-    <div id="canvas-container">
-        <div style="position:absolute; color:white; padding:10px; font-size:12px;">معاينة ثلاثية الأبعاد (Live 3D)</div>
+    <div id="tab-calibration" class="tab-content">
+        <div class="main-container">
+            <div class="input-block"><span class="block-label">Boom Pin (Reference)</span><div class="input-row">
+                <div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable"></div>
+                <div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable"></div>
+                <div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable"></div>
+            </div></div>
+            <div class="input-block"><span class="block-label">Stick Pin</span><div class="input-row">
+                <div class="input-col"><label>X</label><input type="number" id="x_st" class="saveable"></div>
+                <div class="input-col"><label>Y</label><input type="number" id="y_st" class="saveable"></div>
+                <div class="input-col"><label>Z</label><input type="number" id="z_st" class="saveable"></div>
+            </div></div>
+            <div class="input-block"><span class="block-label">Bucket Pin</span><div class="input-row">
+                <div class="input-col"><label>X</label><input type="number" id="x_bu" class="saveable"></div>
+                <div class="input-col"><label>Y</label><input type="number" id="y_bu" class="saveable"></div>
+                <div class="input-col"><label>Z</label><input type="number" id="z_bu" class="saveable"></div>
+            </div></div>
+            <div class="input-block"><span class="block-label">S3 Pin</span><div class="input-row">
+                <div class="input-col"><label>X</label><input type="number" id="x_s3" class="saveable"></div>
+                <div class="input-col"><label>Y</label><input type="number" id="y_s3" class="saveable"></div>
+                <div class="input-col"><label>Z</label><input type="number" id="z_s3" class="saveable"></div>
+            </div></div>
+        </div>
+        <button class="calc-btn" onclick="calcCalibration()">Calculate Crane Config</button>
+        <div id="resultsCalibration" class="results-area">
+            <div class="res-line" style="color:var(--accent-blue)"><span>Boom Stick V (ΔZ):</span> <b id="out-bsv">-</b></div>
+            <div class="res-line"><span>Boom Length:</span> <b id="out-boomL_cal">-</b></div>
+            <div class="res-line"><span>Stick Length:</span> <b id="out-stickL_cal">-</b></div>
+            <div class="res-line"><span>S2:</span> <b id="out-s2">-</b></div>
+            <div class="res-line"><span>S3:</span> <b id="out-s3">-</b></div>
+        </div>
+    </div>
+
+    <button class="history-btn" onclick="toggleHistory()">Show History Log</button>
+    <button class="clear-btn" onclick="resetAllData()">Reset All Memory</button>
+</div>
+
+<div id="historyModal">
+    <div class="modal-content">
+        <h2 style="font-size:16px; border-bottom:2px solid var(--primary-bg)">Calculation History</h2>
+        <div id="historyList"></div>
+        <button class="calc-btn" onclick="toggleHistory()" style="background:var(--error-red); margin:10px 0 0">Close</button>
     </div>
 </div>
 
 <script>
-    // --- إعدادات المشهد الـ 3D ---
-    const container = document.getElementById('canvas-container');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setClearColor(0x2c3e50);
-    container.appendChild(renderer.domElement);
+    const getV = (id) => { const el = document.getElementById(id); return el && el.value !== "" ? parseFloat(el.value) : null; };
+    const format = (v) => v === null || isNaN(v) ? "---" : v.toFixed(3);
 
-    // الإضاءة
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5).normalize();
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040));
+    function openTab(evt, tabName) {
+        document.querySelectorAll(".tab-content").forEach(t => t.style.display = "none");
+        document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+        localStorage.setItem('active_tab', tabName);
+    }
 
-    // إنشاء أجزاء الحفار (بسيطة للفحص)
-    const material = new THREE.MeshLambertMaterial({ color: 0xf1c40f });
-    
-    // الجسم الرئيسي
-    const base = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, 3), material);
-    scene.add(base);
+    function addToHistory(type, results) {
+        let history = JSON.parse(localStorage.getItem('calc_history') || "[]");
+        const entry = { time: new Date().toLocaleString(), type, results };
+        history.unshift(entry);
+        localStorage.setItem('calc_history', JSON.stringify(history.slice(0, 10)));
+    }
 
-    // الذراع الأول (Boom)
-    const boom = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3, 0.4), material);
-    boom.geometry.translate(0, 1.5, 0); // جعل نقطة الدوران في طرف الذراع
-    boom.position.y = 0.4;
-    base.add(boom);
+    function toggleHistory() {
+        const modal = document.getElementById('historyModal');
+        const list = document.getElementById('historyList');
+        if (modal.style.display === "block") {
+            modal.style.display = "none";
+        } else {
+            const history = JSON.parse(localStorage.getItem('calc_history') || "[]");
+            list.innerHTML = history.length ? "" : "No history found.";
+            history.forEach(item => {
+                list.innerHTML += `<div class="history-item"><b>[${item.time}] ${item.type}</b><br>${item.results}</div>`;
+            });
+            modal.style.display = "block";
+        }
+    }
 
-    // الذراع الثاني (Arm)
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2.5, 0.3), material);
-    arm.geometry.translate(0, 1.25, 0);
-    arm.position.y = 3;
-    boom.add(arm);
-
-    camera.position.set(5, 5, 8);
-    camera.lookAt(0, 0, 0);
-
-    // دالة تحديث الحركة الـ 3D بناءً على الزوايا
-    function update3D() {
-        const s1 = parseFloat(document.getElementById('angleS1').value) || 0;
-        const s2 = parseFloat(document.getElementById('angleS2').value) || 0;
-
-        // تحويل الزوايا لراديان وتطبيقها على المفاصل
-        boom.rotation.x = THREE.MathUtils.degToRad(s1 - 90);
-        arm.rotation.x = THREE.MathUtils.degToRad(s2);
+    function calcMeasurements() {
+        const X1=getV('X1'), Y1=getV('Y1'), X2=getV('X2'), Y2=getV('Y2'), Xs=getV('Xs'), Xp=getV('Xp');
+        const antDist = (X1!==null && X2!==null) ? Math.sqrt((X2-X1)**2 + (Y2-Y1)**2) : null;
         
-        renderer.render(scene, camera);
+        document.getElementById('out-antDist').innerText = format(antDist) + " m";
+        document.getElementById('resultsMeasurements').style.display = "block";
+        localStorage.setItem('res_out-antDist', format(antDist));
+        addToHistory("Geometry", `Antenna Dist: ${format(antDist)}m`);
     }
 
-    // دالة الحسابات (نفس منطقك الأصلي)
-    function calculate() {
-        const E = parseFloat(document.getElementById('gpsE').value);
-        const N = parseFloat(document.getElementById('gpsN').value);
-        const Z = parseFloat(document.getElementById('gpsZ').value);
+    function calcCalibration() {
+        const zbp=getV('z_bp'), zst=getV('z_st'), xbp=getV('x_bp'), ybp=getV('y_bp'), xst=getV('x_st'), yst=getV('y_st'), zbp_v=getV('z_bp');
         
-        // مثال لمعادلة الحساب (Bucket Pin)
-        const bucketE = E + 2.5; // استبدلها بمعادلاتك الدقيقة
-        const bucketN = N + 1.2;
-        const bucketZ = Z - 3.4;
+        const bsv = (zbp!==null && zst!==null) ? zbp - zst : null;
+        const bl = (xbp!==null && xst!==null) ? Math.sqrt((xbp-xst)**2 + (ybp-yst)**2 + (zbp-zst)**2) : null;
 
-        document.getElementById('resultsBody').innerHTML = `
-            <tr><td>GPS Point</td><td>${E.toFixed(3)}</td><td>${N.toFixed(3)}</td><td>${Z.toFixed(3)}</td></tr>
-            <tr><td><strong>Bucket Pin</strong></td><td><strong>${bucketE.toFixed(3)}</strong></td><td><strong>${bucketN.toFixed(3)}</strong></td><td><strong>${bucketZ.toFixed(3)}</strong></td></tr>
-        `;
-        update3D();
+        document.getElementById('out-bsv').innerText = format(bsv) + " m";
+        document.getElementById('out-boomL_cal').innerText = format(bl) + " m";
+        document.getElementById('resultsCalibration').style.display = "block";
+        
+        localStorage.setItem('res_out-bsv', format(bsv));
+        localStorage.setItem('res_out-boomL_cal', format(bl));
+        addToHistory("Crane Config", `BSV: ${format(bsv)}m, BoomL: ${format(bl)}m`);
     }
 
-    // تشغيل الأنيميشن والحسابات الأولية
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
+    function autoSave() {
+        const data = {};
+        document.querySelectorAll('.saveable').forEach(el => data[el.id] = el.value);
+        localStorage.setItem('excavator_data', JSON.stringify(data));
     }
-    
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
 
-    animate();
-    calculate();
+    function autoLoad() {
+        const data = JSON.parse(localStorage.getItem('excavator_data') || "{}");
+        for (let id in data) if (document.getElementById(id)) document.getElementById(id).value = data[id];
+        
+        ['out-bsv','out-boomL_cal','out-antDist'].forEach(id => {
+            const val = localStorage.getItem('res_'+id);
+            if (val && document.getElementById(id)) {
+                document.getElementById(id).innerText = val;
+                document.getElementById(id).parentElement.parentElement.style.display = "block";
+            }
+        });
+        const tab = localStorage.getItem('active_tab');
+        if (tab) document.getElementById(tab==='tab-measurements'?'btn-measurements':'btn-calibration').click();
+    }
+
+    function resetAllData() { if(confirm("Clear all?")) { localStorage.clear(); location.reload(); } }
+
+    document.querySelectorAll('.saveable').forEach(el => el.addEventListener('input', autoSave));
+    window.onload = autoLoad;
 </script>
-
 </body>
 </html>
