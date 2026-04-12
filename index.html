@@ -90,16 +90,14 @@
         .export-btn { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); border-radius: 10px; margin-top: 20px; cursor: pointer; font-weight: 800; }
         .report-btn { background: #64748b; color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 20px; }
         
-        /* New Buttons Style */
-        .history-btn { width: 100%; padding: 10px; background: #1e293b; color: var(--accent-blue); border: 1px solid var(--accent-blue); border-radius: 10px; margin-top: 15px; cursor: pointer; font-weight: bold; }
-        .action-btns-container { display: flex; gap: 10px; margin: 0 20px 20px; }
-        .clear-btn { flex: 1; background: #fee2e2; color: #ef4444; border: 1px solid #ef4444; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; }
-        .reset-btn { flex: 1; background: #334155; color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .action-btns-container { display: flex; gap: 8px; margin: 0 20px 20px; }
+        .clear-btn { flex: 1.2; background: #fee2e2; color: #ef4444; border: 1px solid #ef4444; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .history-bottom-btn { flex: 1; background: #1e293b; color: var(--accent-blue); border: 1px solid var(--accent-blue); padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .reset-btn { flex: 1.2; background: #334155; color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
 
-        /* Modal Styles */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
-        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 80%; max-width: 400px; border-radius: 15px; max-height: 70vh; overflow-y: auto; }
-        .history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 12px; }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 85%; max-width: 400px; border-radius: 15px; max-height: 70vh; overflow-y: auto; }
+        .history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.4; }
 
         .footer { padding: 25px; font-size: 11px; color: #64748b; text-align: center; background: #fafafa; border-top: 1px solid #eee; }
     </style>
@@ -119,7 +117,7 @@
     <div class="tabs">
         <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
         <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
-        <button class="tab-btn" onclick="openTab(event, 'tab-diagram')">Diagram</button>
+        <button class="tab-btn" id="btn-diagram" onclick="openTab(event, 'tab-diagram')">Diagram</button>
     </div>
 
     <div id="tab-measurements" class="tab-content active">
@@ -186,7 +184,6 @@
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">-</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">-</b></div>
             
-            <button class="history-btn" onclick="toggleHistory('geometry')">Show History</button>
             <button class="export-btn" onclick="exportTxtMeasurements()">Export Results (.txt)</button>
         </div>
     </div>
@@ -219,7 +216,6 @@
             <div class="res-line"><span>T5 (Holes separation):</span> <b id="out-ts"></b></div>
             <div class="res-line"><span>T1:</span> <b id="out-t1"></b></div>
             <div class="res-line"><span>T6 (Tooth angle):</span> <b id="out-t6" style="color:var(--pds-orange)"></b></div>
-            <button class="history-btn" onclick="toggleHistory('calibration')">Show History</button>
             <button class="report-btn" onclick="downloadReportCalibration()">Download TXT Report</button>
         </div>
     </div>
@@ -235,6 +231,7 @@
 
     <div class="action-btns-container">
         <button class="clear-btn" onclick="clearPageOnly()">clear page</button>
+        <button class="history-bottom-btn" onclick="showHistoryByActiveTab()">History</button>
         <button class="reset-btn" onclick="resetHistoryOnly()">reset history</button>
     </div>
 
@@ -247,9 +244,9 @@
 
 <div id="historyModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0">Calculation History (Last 10)</h3>
+        <h3 id="historyTitle" style="margin-top:0; font-size:16px; color:#1e293b; border-bottom:2px solid #eee; padding-bottom:10px;">History</h3>
         <div id="historyContent"></div>
-        <button onclick="document.getElementById('historyModal').style.display='none'" class="calc-btn" style="width:100%; margin:10px 0 0 0">Close</button>
+        <button onclick="document.getElementById('historyModal').style.display='none'" class="calc-btn" style="width:100%; margin:15px 0 0 0; padding:12px;">Close</button>
     </div>
 </div>
 
@@ -286,13 +283,29 @@
         localStorage.setItem('history_' + type, JSON.stringify(history));
     }
 
-    function toggleHistory(type) {
+    // وظيفة لعرض التاريخ بناء على التبويب المفتوح
+    function showHistoryByActiveTab() {
+        const activeTabId = document.querySelector('.tab-content.active').id;
+        if (activeTabId === 'tab-measurements') {
+            toggleHistory('geometry', 'Geometry History');
+        } else if (activeTabId === 'tab-calibration') {
+            toggleHistory('calibration', 'Calibration History');
+        } else {
+            alert("يرجى اختيار تبويب Geometry أو Crane Config لعرض السجل");
+        }
+    }
+
+    function toggleHistory(type, title) {
         let history = JSON.parse(localStorage.getItem('history_' + type) || "[]");
         let content = document.getElementById('historyContent');
+        document.getElementById('historyTitle').innerText = title;
         content.innerHTML = history.length ? "" : "No history found.";
         history.forEach(item => {
             let row = `<div class="history-item"><strong>${item.time}</strong><br>`;
-            for (let key in item.data) row += `${key}: ${item.data[key]} | `;
+            for (let key in item.data) {
+                // إظهار النتائج المختصرة فقط في الهيستوري لسهولة القراءة
+                if (!key.startsWith('out-a')) row += `${key.replace('out-','')}: ${item.data[key]} | `;
+            }
             content.innerHTML += row + `</div>`;
         });
         document.getElementById('historyModal').style.display = 'block';
@@ -432,12 +445,11 @@
         if (localStorage.getItem('show_res2') === 'true') document.getElementById('resultsCalibration').style.display = "block";
         const activeTab = localStorage.getItem('active_tab');
         if (activeTab) {
-            const btnId = activeTab === 'tab-measurements' ? 'btn-measurements' : (activeTab === 'tab-calibration' ? 'btn-calibration' : null);
+            const btnId = activeTab === 'tab-measurements' ? 'btn-measurements' : (activeTab === 'tab-calibration' ? 'btn-calibration' : 'btn-diagram');
             if (btnId) document.getElementById(btnId).click();
         }
     }
 
-    // --- New Clear Logic ---
     function clearPageOnly() {
         const activeTab = document.querySelector('.tab-content.active');
         activeTab.querySelectorAll('input').forEach(input => input.value = "");
@@ -475,7 +487,6 @@
         link.href = URL.createObjectURL(blob); link.download = 'Bucket_Config_Report.txt'; link.click();
     }
 
-    // Attach Listeners
     document.querySelectorAll('.saveable').forEach(el => el.addEventListener('input', autoSave));
     window.onload = autoLoad;
 </script>
