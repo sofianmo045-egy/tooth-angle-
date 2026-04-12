@@ -40,7 +40,6 @@
         .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
         .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; }
-        .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         
         .tabs { display: flex; background: #1e293b; border-bottom: 2px solid #334155; }
         .tab-btn { 
@@ -87,7 +86,6 @@
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
         .modal-content { background: white; margin: 15% auto; padding: 20px; width: 85%; max-width: 400px; border-radius: 15px; max-height: 70vh; overflow-y: auto; }
-        .footer { padding: 25px; font-size: 11px; color: #64748b; text-align: center; background: #fafafa; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -95,54 +93,53 @@
 <div class="card">
     <div class="header">
         <h1>Excavator Geometry</h1>
-        <p>Calculator and Calibration Assistant</p>
+        <p>NMDC Hydrographic Survey Dept</p>
     </div>
 
     <div class="tabs">
         <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
         <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
-        <button class="tab-btn" id="btn-diagram" onclick="openTab(event, 'tab-diagram')">Diagram</button>
     </div>
 
     <div id="tab-measurements" class="tab-content active">
         <div class="group" style="background: #f8fbff; margin-top:10px;">
             <span class="group-title">ANTENNA 1</span>
             <div class="input-row">
-                <div class="input-col"><label>X1</label><input type="number" step="0.001" id="X1" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Y1</label><input type="number" step="0.001" id="Y1" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Z1</label><input type="number" step="0.001" id="Z1" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>X1</label><input type="number" step="0.001" id="X1" class="saveable"></div>
+                <div class="input-col"><label>Y1</label><input type="number" step="0.001" id="Y1" class="saveable"></div>
+                <div class="input-col"><label>Z1</label><input type="number" step="0.001" id="Z1" class="saveable"></div>
             </div>
         </div>
         <div class="group" style="background: #f8fbff;">
             <span class="group-title">ANTENNA 2</span>
             <div class="input-row">
-                <div class="input-col"><label>X2</label><input type="number" step="0.001" id="X2" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Y2</label><input type="number" step="0.001" id="Y2" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Z2</label><input type="number" step="0.001" id="Z2" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>X2</label><input type="number" step="0.001" id="X2" class="saveable"></div>
+                <div class="input-col"><label>Y2</label><input type="number" step="0.001" id="Y2" class="saveable"></div>
+                <div class="input-col"><label>Z2</label><input type="number" step="0.001" id="Z2" class="saveable"></div>
             </div>
         </div>
         <div class="group">
             <span class="group-title">BOOM PIN STARBOARD</span>
             <div class="input-row">
-                <div class="input-col"><label>Xs</label><input type="number" step="0.001" id="Xs" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Ys</label><input type="number" step="0.001" id="Ys" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Zs</label><input type="number" step="0.001" id="Zs" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Xs</label><input type="number" step="0.001" id="Xs" class="saveable"></div>
+                <div class="input-col"><label>Ys</label><input type="number" step="0.001" id="Ys" class="saveable"></div>
+                <div class="input-col"><label>Zs</label><input type="number" step="0.001" id="Zs" class="saveable"></div>
             </div>
         </div>
         <div class="group">
             <span class="group-title">BOOM PIN PORTSIDE</span>
             <div class="input-row">
-                <div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable"></div>
+                <div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable"></div>
+                <div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable"></div>
             </div>
         </div>
         <div class="group" style="background: #f0fff4;">
             <span class="group-title">BUCKET CENTER</span>
             <div class="input-row">
-                <div class="input-col"><label>Xb</label><input type="number" step="0.001" id="Xb" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Yb</label><input type="number" step="0.001" id="Yb" class="saveable" placeholder="-"></div>
-                <div class="input-col"><label>Zb</label><input type="number" step="0.001" id="Zb" class="saveable" placeholder="-"></div>
+                <div class="input-col"><label>Xb</label><input type="number" step="0.001" id="Xb" class="saveable"></div>
+                <div class="input-col"><label>Yb</label><input type="number" step="0.001" id="Yb" class="saveable"></div>
+                <div class="input-col"><label>Zb</label><input type="number" step="0.001" id="Zb" class="saveable"></div>
             </div>
         </div>
 
@@ -170,7 +167,7 @@
     </div>
 
     <div id="tab-calibration" class="tab-content">
-        <div class="main-container">
+        <div class="group">
             <div class="input-block"><span class="block-label" style="color:var(--pds-orange)">Boom Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label">Stick Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_st" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_st" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_st" class="saveable" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label">Bucket Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bu" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bu" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bu" class="saveable" step="0.001"></div></div></div>
@@ -202,12 +199,6 @@
         </div>
     </div>
 
-    <div id="tab-diagram" class="tab-content">
-        <div style="text-align:center; padding:20px;">
-            <img src="https://via.placeholder.com/400x300?text=Excavator+Points+Diagram" style="max-width:100%; border-radius:10px;">
-        </div>
-    </div>
-
     <div class="action-btns-container">
         <button class="clear-btn" onclick="clearPageOnly()">clear page</button>
         <button class="history-bottom-btn" onclick="showHistoryByActiveTab()">History</button>
@@ -229,7 +220,6 @@
         document.getElementById(tabName).style.display = "block";
         document.getElementById(tabName).classList.add("active");
         evt.currentTarget.classList.add("active");
-        localStorage.setItem('active_tab', tabName);
     }
 
     function calcMeasurements() {
@@ -259,9 +249,8 @@
         }
 
         const res = { 'out-mH': format(mH, "°"), 'out-antH': format(antH, "°"), 'out-hC': format(hC, "°"), 'out-antDist': format(antDist, " m"), 'out-a1F': format(a1.F, " m"), 'out-a1S': format(a1.S, " m"), 'out-a1U': format(a1.U, " m"), 'out-a2F': format(a2.F, " m"), 'out-a2S': format(a2.S, " m"), 'out-a2U': format(a2.U, " m") };
-        for (let id in res) { document.getElementById(id).innerText = res[id]; localStorage.setItem('res_'+id, res[id]); }
+        for (let id in res) document.getElementById(id).innerText = res[id];
         document.getElementById('resultsMeasurements').style.display = "block";
-        localStorage.setItem('show_res1', 'true');
     }
 
     function calcCalibration() {
@@ -284,18 +273,13 @@
             if (m1 > 0 && m2 > 0) t6_val = Math.acos(Math.max(-1, Math.min(1, (vT1.x*vS5.x+vT1.y*vS5.y+vT1.z*vS5.z)/(m1*m2)))) * 180 / Math.PI;
         }
         const res = { 'out-boomL_cal': format(dist3D(BP, ST), " m"), 'out-stickL_cal': format(s1, " m"), 'out-bsv': format(bsv, " m"), 'out-s2': format(s2_val, " m"), 'out-s3': format(s3_val, " m"), 'out-s4': format(dist3D(S3, S4), " m"), 'out-s5': format(dist3D(S4, S5), " m"), 'out-ts': format(dist3D(BU, S5), " m"), 'out-t1': format(dist3D(T1, BU), " m"), 'out-t6': format(t6_val, "°") };
-        for (let id in res) { document.getElementById(id).innerHTML = res[id]; localStorage.setItem('res_'+id, res[id]); }
+        for (let id in res) document.getElementById(id).innerText = res[id];
         document.getElementById('resultsCalibration').style.display = "block";
-        localStorage.setItem('show_res2', 'true');
     }
 
-    // --- Styled Reports ---
     function generateHTMLReport(title, rows) {
-        let rowsHtml = rows.map(r => `<tr><td style="padding:8px; border-bottom:1px solid #eee; color:#555;">${r.label}</td><td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold;">${r.value}</td></tr>`).join('');
-        return `<html><body style="font-family:sans-serif; padding:20px;"><div style="max-width:600px; margin:auto; border:1px solid #ddd; padding:20px; border-radius:10px;">
-            <h2 style="border-bottom:2px solid #38bdf8; padding-bottom:10px;">${title}</h2>
-            <p style="font-size:12px; color:#999;">Date: ${new Date().toLocaleString()}</p>
-            <table style="width:100%; border-collapse:collapse;">${rowsHtml}</table></div></body></html>`;
+        let rowsHtml = rows.map(r => `<tr><td style="padding:8px; border-bottom:1px solid #eee;">${r.label}</td><td style="padding:8px; border-bottom:1px solid #eee; font-weight:bold;">${r.value}</td></tr>`).join('');
+        return `<html><body><h2 style="color:#0f172a;">${title}</h2><table border="1" style="border-collapse:collapse; width:100%;">${rowsHtml}</table></body></html>`;
     }
 
     function exportGeometryReport() {
@@ -339,17 +323,6 @@
     }
 
     function resetHistoryOnly() { if (confirm("مسح الكل؟")) { localStorage.clear(); location.reload(); } }
-
-    window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('excavator_inputs') || "{}");
-        for (let id in saved) { const el = document.getElementById(id); if (el) el.value = saved[id]; }
-        if (localStorage.getItem('show_res1') === 'true') document.getElementById('resultsMeasurements').style.display = "block";
-        if (localStorage.getItem('show_res2') === 'true') document.getElementById('resultsCalibration').style.display = "block";
-    };
-    document.addEventListener('input', () => {
-        const inputs = {}; document.querySelectorAll('.saveable').forEach(el => inputs[el.id] = el.value);
-        localStorage.setItem('excavator_inputs', JSON.stringify(inputs));
-    });
 </script>
 </body>
 </html>
