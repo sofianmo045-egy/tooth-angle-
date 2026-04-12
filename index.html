@@ -168,7 +168,7 @@
         <button class="calc-btn" onclick="calcMeasurements()">Calculate Measurements</button>
 
         <div id="resultsMeasurements" class="results-area">
-            <div style="border-bottom: 2px solid var(--accent-blue); padding-bottom: 10px; font-size: 16px; font-weight: bold; color: var(--accent-blue);">MEASUREMENTS RESULTS</div>
+            <div style="border-bottom: 2px solid var(--accent-blue); padding-bottom: 10px; font-size: 16px; font-weight: bold; color: var(--accent-blue);">GEOMETRY RESULTS</div>
             <div class="res-line"><span>Machine Heading:</span> <b id="out-mH">N/A</b></div>
             <div class="res-line"><span>Antenna Heading:</span> <b id="out-antH">N/A</b></div>
             <div class="res-line" style="border-left: 3px solid #fcd34d; padding-left: 10px;"><span style="color: #fcd34d;">Heading Correction:</span> <b id="out-hC" style="color: #fcd34d;">N/A</b></div>
@@ -184,7 +184,7 @@
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">N/A</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">N/A</b></div>
             
-            <button class="export-btn" onclick="exportReport1()">Download Crane Config Report</button>
+            <button class="export-btn" onclick="exportReport1()">Download Geometry Report</button>
         </div>
     </div>
 
@@ -217,7 +217,7 @@
             <div class="res-line"><span>T5 (Holes separation):</span> <b id="out-ts">N/A</b></div>
             <div class="res-line"><span>T1:</span> <b id="out-t1">N/A</b></div>
             <div class="res-line"><span>T6 (Tooth angle):</span> <b id="out-t6" style="color:var(--pds-orange)">N/A</b></div>
-            <button class="report-btn" onclick="exportReport2()">Download Bucket Config Report</button>
+            <button class="report-btn" onclick="exportReport2()">Download Crane Configuration Report</button>
         </div>
     </div>
 
@@ -453,14 +453,17 @@
         }
     }
 
-    // --- HTML Styled Reports ---
     function generateHTMLReport(title, dataRows) {
         let rowsHtml = '';
         dataRows.forEach(row => {
-            rowsHtml += `<tr>
-                <td style="padding:10px; border-bottom:1px solid #eee; color:#666;">${row.label}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000;">${row.value}</td>
-            </tr>`;
+            if(row.isHeader) {
+                rowsHtml += `<tr><td colspan="2" style="padding:15px 10px 5px 10px; font-weight:bold; color:#10b981; font-size:11px; border-bottom:1px dashed #ddd; text-transform:uppercase;">${row.label}</td></tr>`;
+            } else {
+                rowsHtml += `<tr>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#666; font-size:14px;">${row.label}</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000; font-size:14px; text-align:right;">${row.value}</td>
+                </tr>`;
+            }
         });
 
         return `
@@ -491,36 +494,42 @@
 
     function exportReport1() {
         const data = [
+            { label: 'General Heading', isHeader: true },
             { label: 'Machine Heading', value: document.getElementById('out-mH').innerText },
             { label: 'Antenna Heading', value: document.getElementById('out-antH').innerText },
             { label: 'Heading Correction', value: document.getElementById('out-hC').innerText },
             { label: 'Antenna H-Distance', value: document.getElementById('out-antDist').innerText },
-            { label: 'A1 Forward (Y)', value: document.getElementById('out-a1F').innerText },
-            { label: 'A1 Starboard (X)', value: document.getElementById('out-a1S').innerText },
-            { label: 'A1 Up (Z)', value: document.getElementById('out-a1U').innerText },
-            { label: 'A2 Forward (Y)', value: document.getElementById('out-a2F').innerText },
-            { label: 'A2 Starboard (X)', value: document.getElementById('out-a2S').innerText },
-            { label: 'A2 Up (Z)', value: document.getElementById('out-a2U').innerText }
+            { label: 'Antenna 1 - Offsets', isHeader: true },
+            { label: 'Forward (Y)', value: document.getElementById('out-a1F').innerText },
+            { label: 'Starboard (X)', value: document.getElementById('out-a1S').innerText },
+            { label: 'Up (Z)', value: document.getElementById('out-a1U').innerText },
+            { label: 'Antenna 2 - Offsets', isHeader: true },
+            { label: 'Forward (Y)', value: document.getElementById('out-a2F').innerText },
+            { label: 'Starboard (X)', value: document.getElementById('out-a2S').innerText },
+            { label: 'Up (Z)', value: document.getElementById('out-a2U').innerText }
         ];
-        const html = generateHTMLReport('Crane Configuration Report', data);
-        downloadFile(html, 'Crane_Configuration_Report.doc');
+        const html = generateHTMLReport('Geometry Report', data);
+        downloadFile(html, 'Geometry_Report.doc');
     }
 
     function exportReport2() {
         const data = [
+            { label: 'GEOMETRY LENGTHS', isHeader: true },
             { label: 'Boom Length', value: document.getElementById('out-boomL_cal').innerText },
             { label: 'Stick Length', value: document.getElementById('out-stickL_cal').innerText },
             { label: 'Boom Stick V (ΔZ)', value: document.getElementById('out-bsv').innerText },
-            { label: 'S2 Offset', value: document.getElementById('out-s2').innerText },
-            { label: 'S3 Offset', value: document.getElementById('out-s3').innerText },
-            { label: 'S4 Length', value: document.getElementById('out-s4').innerText },
-            { label: 'S5 Length', value: document.getElementById('out-s5').innerText },
-            { label: 'T5 (Holes)', value: document.getElementById('out-ts').innerText },
-            { label: 'T1 (Length)', value: document.getElementById('out-t1').innerText },
-            { label: 'T6 (Angle)', value: document.getElementById('out-t6').innerText }
+            { label: 'SUPPORT LEVER ATTACHMENT', isHeader: true },
+            { label: 'S2', value: document.getElementById('out-s2').innerText },
+            { label: 'S3', value: document.getElementById('out-s3').innerText },
+            { label: 'S4', value: document.getElementById('out-s4').innerText },
+            { label: 'S5', value: document.getElementById('out-s5').innerText },
+            { label: 'BUCKET & TEETH', isHeader: true },
+            { label: 'T5 (Holes separation)', value: document.getElementById('out-ts').innerText },
+            { label: 'T1', value: document.getElementById('out-t1').innerText },
+            { label: 'T6 (Tooth angle)', value: document.getElementById('out-t6').innerText }
         ];
-        const html = generateHTMLReport('Bucket Configuration Report', data);
-        downloadFile(html, 'Bucket_Config_Report.doc');
+        const html = generateHTMLReport('Crane Configuration Report', data);
+        downloadFile(html, 'Crane_Configuration_Report.doc');
     }
 
     document.querySelectorAll('.saveable').forEach(el => el.addEventListener('input', autoSave));
