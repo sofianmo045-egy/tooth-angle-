@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EX. Measurements - Mohamed Shehata</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4 dir-ltr">
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState } = React;
+
+        const InputGroup = ({ label, fields, values, onChange, color }) => (
+            <div className={bg-white rounded-xl p-4 mb-4 border-l-4 ${color} shadow-sm}>
+                <h3 className="font-bold text-xs uppercase tracking-wider mb-3 text-gray-500">{label}</h3>
+                <div className="grid grid-cols-3 gap-2">
+                    {fields.map(f => (
+                        <div key={f.key}>
+                            <label className="block text-[10px] font-bold text-gray-400 mb-1">{f.label}</label>
+                            <input 
+                                type="number" step="0.001" 
+                                className="w-full border border-gray-200 rounded p-2 text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                                value={values[f.key] || ""}
+                                onChange={(e) => onChange(f.key, e.target.value)}
+                                placeholder="0.000"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+
+        function App() {
+            const [v, setV] = useState({});
+            const [res, setRes] = useState(null);
+
+            const calc = () => {
+                const d = {};
+                ["X1","Y1","Z1","X2","Y2","Z2","Xp","Yp","Zp","Xs","Ys","Zs","Xst","Yst","Zst","Xbs","Ybs","Zbs","Xb","Yb","Zb"].forEach(k => d[k] = parseFloat(v[k] || 0));
+
+                const Xc = (d.Xp + d.Xs) / 2, Yc = (d.Yp + d.Ys) / 2, Zc = (d.Zp + d.Zs) / 2;
+                
+                // CORRECTED HEADING: Clockwise from North
+                const dX = d.Xb - Xc;
+                const dY = d.Yb - Yc;
+                let h = (Math.atan2(dX, dY) * 180 / Math.PI);
+                if (h < 0) h += 360;
+
+                const hRad = h * Math.PI / 180;
+                const getL = (X, Y, Z) => ({
+                    F: (Y - Yc) * Math.cos(hRad) + (X - Xc) * Math.sin(hRad),
+                    S: (X - Xc) * Math.cos(hRad) - (Y - Yc) * Math.sin(hRad),
+                    U: Z - Zc
+                });
+
+                setRes({
+                    h,
+                    a1: getL(d.X1, d.Y1, d.Z1),
+                    a2: getL(d.X2, d.Y2, d.Z2),
+                    boom: Math.sqrt((d.Xs-d.Xst)*2 + (d.Ys-d.Yst)2 + (d.Zs-d.Zst)*2),
+                    stick: Math.sqrt((d.Xst-d.Xbs)*2 + (d.Yst-d.Ybs)2 + (d.Zst-d.Zbs)*2),
+                    antH: Math.sqrt((d.X2-d.X1)*2 + (d.Y2-d.Y1)*2)
+                });
+            };
+
+            return (
+                <div className="max-w-md mx-auto pb-10">
+                    <header className="text-center py-6">
+                        <h1 className="text-2xl font-black text-gray-800">EX. Measurements</h1>
+                        <p className="text-xs text-gray-400 tracking-widest uppercase">NMDC Project Tool</p>
+                    </header>
+
+                    <InputGroup label="Antennas 1 & 2" color="border-blue-500" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'X1',label:'X1'},{key:'Y1',label:'Y1'},{key:'Z1',label:'Z1'},{key:'X2',label:'X2'},{key:'Y2',label:'Y2'},{key:'Z2',label:'Z2'}]} />
+                    <InputGroup label="Boom Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xs',label:'X'},{key:'Ys',label:'Y'},{key:'Zs',label:'Z'}]} />
+                    <InputGroup label="Boom Pin Portside" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xp',label:'X'},{key:'Yp',label:'Y'},{key:'Zp',label:'Z'}]} />
+                    <InputGroup label="Stick Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xst',label:'X'},{key:'Yst',label:'Y'},{key:'Zst',label:'Z'}]} />
+                    <InputGroup label="Bucket Pin Starboard" color="border-gray-300" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xbs',label:'X'},{key:'Ybs',label:'Y'},{key:'Zbs',label:'Z'}]} />
+                    <InputGroup label="Bucket Center" color="border-green-500" values={v} onChange={(k,val)=>setV({...v,[k]:val})} fields={[{key:'Xb',label:'X'},{key:'Yb',label:'Y'},{key:'Zb',label:'Z'}]} />
+
+                    <button onClick={calc} className="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all mb-6">CALCULATE RESULTS</button>
+
+                    {res && (
+                        <div className="bg-slate-800 rounded-2xl p-5 text-white shadow-2xl animate-in fade-in duration-500">
+                            <div className="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
+                                <span className="text-slate-400 text-sm font-bold">Machine Heading</span>
+                                <span className="text-2xl font-mono text-green-400">{res.h.toFixed(3)}°</span>
+                            </div>
+                            <div className="space-y-3">
+                                <div className="flex justify-between text-sm"><span className="text-slate-400">Antenna H-Dist:</span><span>{res.antH.toFixed(3)} m</span></div>
+                                <div className="p-3 bg-slate-900 rounded-lg">
+                                    <p className="text-[10px] text-slate-500 mb-2 font-bold uppercase">A1 Local (F / S / U)</p>
+                                    <p className="font-mono text-blue-300">{res.a1.F.toFixed(3)} / {res.a1.S.toFixed(3)} / {res.a1.U.toFixed(3)}</p>
+                                </div>
+                                <div className="p-3 bg-slate-900 rounded-lg">
+                                    <p className="text-[10px] text-slate-500 mb-2 font-bold uppercase">A2 Local (F / S / U)</p>
+                                    <p className="font-mono text-blue-300">{res.a2.F.toFixed(3)} / {res.a2.S.toFixed(3)} / {res.a2.U.toFixed(3)}</p>
+                                </div>
+                                <div className="flex justify-between text-sm pt-2 border-t border-slate-700"><span className="text-slate-400">Boom Length:</span><span>{res.boom.toFixed(3)} m</span></div>
+                                <div className="flex justify-between text-sm"><span className="text-slate-400">Stick Length:</span><span>{res.stick.toFixed(3)} m</span></div>
+                            </div>
+                        </div>
+                    )}
+
+                    <footer className="mt-10 text-center border-t pt-6 border-gray-200">
+                        <p className="text-sm font-bold text-gray-700">Created by: Mohamed Shehata</p>
+                        <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank" className="text-blue-600 text-xs font-bold hover:underline">Contact me on LinkedIn</a>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
