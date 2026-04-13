@@ -303,7 +303,7 @@
                 }
             });
 
-            // Special case: Sync Boom Pin Center in Calibration Tab if BS or BP updated
+            // Special case: Sync Boom Pin Center in Calibration Tab if BS or BT updated
             const xs = getV('Xs'), ys = getV('Ys'), zs = getV('Zs'), xp = getV('Xp'), yp = getV('Yp'), zp = getV('Zp');
             if (xs !== null && xp !== null) {
                 document.getElementById('x_bp').value = ((xs+xp)/2).toFixed(3);
