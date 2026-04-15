@@ -42,7 +42,6 @@
         .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; }
         .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .created-by { margin-top: 10px; font-size: 12px; color: #94a3b8; }
-        .support-text { display: block; margin-top: 5px; color: #64748b; font-style: italic; font-size: 11px; }
 
         .tabs { display: flex; background: #1e293b; border-bottom: 2px solid #334155; }
         .tab-btn { 
@@ -153,7 +152,7 @@
         <div class="group" style="background: #f8fbff; margin-top:10px;"><span class="group-title"><span class="id-badge">A1</span> ANTENNA 1</span><div class="input-row"><div class="input-col"><label>X1</label><input type="number" step="0.001" id="X1" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Y1</label><input type="number" step="0.001" id="Y1" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Z1</label><input type="number" step="0.001" id="Z1" class="saveable" oninput="autoSave()"></div></div></div>
         <div class="group" style="background: #f8fbff;"><span class="group-title"><span class="id-badge">A2</span> ANTENNA 2</span><div class="input-row"><div class="input-col"><label>X2</label><input type="number" step="0.001" id="X2" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Y2</label><input type="number" step="0.001" id="Y2" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Z2</label><input type="number" step="0.001" id="Z2" class="saveable" oninput="autoSave()"></div></div></div>
         <div class="group"><span class="group-title"><span class="id-badge">BS</span> BOOM PIN STARBOARD</span><div class="input-row"><div class="input-col"><label>Xs</label><input type="number" step="0.001" id="Xs" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Ys</label><input type="number" step="0.001" id="Ys" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Zs</label><input type="number" step="0.001" id="Zs" class="saveable" oninput="autoSave()"></div></div></div>
-        <div class="group"><span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSSIDE</span><div class="input-row"><div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable" oninput="autoSave()"></div></div></div>
+        <div class="group"><span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSIDE</span><div class="input-row"><div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable" oninput="autoSave()"></div></div></div>
         <div class="group" style="background: #f0fff4;"><span class="group-title"><span class="id-badge">BU</span> BUCKET CENTER</span><div class="input-row"><div class="input-col"><label>Xb</label><input type="number" step="0.001" id="Xb" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Yb</label><input type="number" step="0.001" id="Yb" class="saveable" oninput="autoSave()"></div><div class="input-col"><label>Zb</label><input type="number" step="0.001" id="Zb" class="saveable" oninput="autoSave()"></div></div></div>
 
         <button class="calc-btn" onclick="calcMeasurements()">Calculate Measurements</button>
@@ -172,7 +171,7 @@
             <div class="res-line"><span>Forward (Y):</span> <b id="out-a2F">N/A</b></div>
             <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">N/A</b></div>
             <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">N/A</b></div>
-            <button class="export-btn" onclick="exportReport1()">View/Print Geometry Report</button>
+            <button class="export-btn" onclick="exportReport1()">Download Geometry Report</button>
         </div>
     </div>
 
@@ -203,7 +202,7 @@
             <div class="res-line"><span>T5 (Holes separation):</span> <b id="out-ts">N/A</b></div>
             <div class="res-line"><span>T1:</span> <b id="out-t1">N/A</b></div>
             <div class="res-line"><span>T6 (Tooth angle):</span> <b id="out-t6" style="color:var(--pds-orange)">N/A</b></div>
-            <button class="report-btn" onclick="exportReport2()">View/Print Crane Config Report</button>
+            <button class="report-btn" onclick="exportReport2()">Download Crane Configuration Report</button>
         </div>
     </div>
 
@@ -288,67 +287,69 @@
         }
         if(T1&&BU&&S5){
             const vT={x:T1.x-BU.x,y:T1.y-BU.y,z:T1.z-BU.z}, vS={x:S5.x-BU.x,y:S5.y-BU.y,z:S5.z-BU.z};
-            const m1=Math.sqrt(vT.x**2+vT.y**2+vT.z**2), m2=Math.sqrt(vS.x**2+vS.y**2+vS.z**2); t6_v=Math.acos((vT.x*vS.x+vT.y*vS.y+vT.z*vS.z)/(m1*m2))*180/Math.PI;
+            const m1=Math.sqrt(vT.x**2+vT.y**2+vT.z**2), m2=Math.sqrt(vS.x**2+vS.y**2+vS.z**2);
+            if(m1>0 && m2>0) t6_v=Math.acos(Math.max(-1, Math.min(1, (vT.x*vS.x+vT.y*vS.y+vT.z*vS.z)/(m1*m2))))*180/Math.PI;
         }
         const res={'out-boomL_cal':format(dist3D(BP,ST)," m"), 'out-stickL_cal':format(s1," m"), 'out-bsv':format(bsv," m"), 'out-s2':format(s2_v," m"), 'out-s3':format(s3_v," m"), 'out-s4':format(dist3D(S3,S4)," m"), 'out-s5':format(dist3D(S4,S5)," m"), 'out-ts':format(dist3D(BU,S5)," m"), 'out-t1':format(dist3D(T1,BU)," m"), 'out-t6':format(t6_v,"°")};
         for(let id in res){ document.getElementById(id).innerHTML=res[id]; localStorage.setItem('res_'+id, res[id]); }
         document.getElementById('resultsCalibration').style.display="block"; localStorage.setItem('show_res2','true'); saveHistory('calibration', res);
     }
 
+    // --- دالة إنشاء التقرير المأخوذة من الكود الخاص بك ---
+    function generateHTMLReport(title, dataRows) {
+        let rowsHtml = '';
+        dataRows.forEach(row => {
+            if(row.isHeader) {
+                rowsHtml += `<tr><td colspan="2" style="padding:15px 10px 5px 10px; font-weight:bold; color:#10b981; font-size:11px; border-bottom:1px dashed #ddd; text-transform:uppercase;">${row.label}</td></tr>`;
+            } else {
+                rowsHtml += `<tr>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#666; font-size:14px;">${row.label}</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000; font-size:14px; text-align:right;">${row.value}</td>
+                </tr>`;
+            }
+        });
+        return `<html><head><title>${title}</title><style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:20px;}</style></head>
+        <body><h2 style="color:#0f172a;border-bottom:3px solid #38bdf8;padding-bottom:10px;">${title}</h2><table>${rowsHtml}</table></body></html>`;
+    }
+
     function exportReport1() {
-        const data = [
-            {l: "Machine Heading", v: document.getElementById('out-mH').innerText},
-            {l: "Antenna Heading", v: document.getElementById('out-antH').innerText},
-            {l: "Heading Correction", v: document.getElementById('out-hC').innerText},
-            {l: "Antenna H-Distance", v: document.getElementById('out-antDist').innerText},
-            {l: "A1 Forward (Y)", v: document.getElementById('out-a1F').innerText},
-            {l: "A1 Starboard (X)", v: document.getElementById('out-a1S').innerText},
-            {l: "A1 Up (Z)", v: document.getElementById('out-a1U').innerText},
-            {l: "A2 Forward (Y)", v: document.getElementById('out-a2F').innerText},
-            {l: "A2 Starboard (X)", v: document.getElementById('out-a2S').innerText},
-            {l: "A2 Up (Z)", v: document.getElementById('out-a2U').innerText}
+        const rows = [
+            {label: "Geometry Summary", isHeader: true},
+            {label: "Machine Heading", value: document.getElementById('out-mH').innerText},
+            {label: "Antenna Heading", value: document.getElementById('out-antH').innerText},
+            {label: "Heading Correction", value: document.getElementById('out-hC').innerText},
+            {label: "Antenna H-Distance", value: document.getElementById('out-antDist').innerText},
+            {label: "Antenna 1 Offsets", isHeader: true},
+            {label: "Forward (Y)", value: document.getElementById('out-a1F').innerText},
+            {label: "Starboard (X)", value: document.getElementById('out-a1S').innerText},
+            {label: "Up (Z)", value: document.getElementById('out-a1U').innerText},
+            {label: "Antenna 2 Offsets", isHeader: true},
+            {label: "Forward (Y)", value: document.getElementById('out-a2F').innerText},
+            {label: "Starboard (X)", value: document.getElementById('out-a2S').innerText},
+            {label: "Up (Z)", value: document.getElementById('out-a2U').innerText}
         ];
-        generateHTMLReport("Geometry Survey Report", data);
+        const blob = new Blob([generateHTMLReport("Excavator Geometry Report", rows)], {type: 'text/html'});
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Geometry_Report.html'; link.click();
     }
 
     function exportReport2() {
-        const data = [
-            {l: "Boom Length", v: document.getElementById('out-boomL_cal').innerText},
-            {l: "Stick Length", v: document.getElementById('out-stickL_cal').innerText},
-            {l: "Boom Stick V (ΔZ)", v: document.getElementById('out-bsv').innerText},
-            {l: "S2 (Dist to ST)", v: document.getElementById('out-s2').innerText},
-            {l: "S3 (Offset)", v: document.getElementById('out-s3').innerText},
-            {l: "S4 (Lever)", v: document.getElementById('out-s4').innerText},
-            {l: "S5 (Lever)", v: document.getElementById('out-s5').innerText},
-            {l: "T5 (Holes)", v: document.getElementById('out-ts').innerText},
-            {l: "T1 (Bucket)", v: document.getElementById('out-t1').innerText},
-            {l: "T6 (Angle)", v: document.getElementById('out-t6').innerText}
+        const rows = [
+            {label: "Geometry Lengths", isHeader: true},
+            {label: "Boom Length", value: document.getElementById('out-boomL_cal').innerText},
+            {label: "Stick Length", value: document.getElementById('out-stickL_cal').innerText},
+            {label: "Boom Stick V (ΔZ)", value: document.getElementById('out-bsv').innerText},
+            {label: "Lever Attachment", isHeader: true},
+            {label: "S2 Offset", value: document.getElementById('out-s2').innerText},
+            {label: "S3 Offset", value: document.getElementById('out-s3').innerText},
+            {label: "S4 Offset", value: document.getElementById('out-s4').innerText},
+            {label: "S5 Offset", value: document.getElementById('out-s5').innerText},
+            {label: "Bucket & Teeth", isHeader: true},
+            {label: "T5 Separation", value: document.getElementById('out-ts').innerText},
+            {label: "T1 Tooth Length", value: document.getElementById('out-t1').innerText},
+            {label: "T6 Tooth Angle", value: document.getElementById('out-t6').innerText}
         ];
-        generateHTMLReport("Crane Configuration Report", data);
-    }
-
-    function generateHTMLReport(title, rows) {
-        const win = window.open('', '_blank');
-        let tableRows = rows.map(r => `<tr><td>${r.l}</td><td><b>${r.v}</b></td></tr>`).join('');
-        win.document.write(`
-            <html><head><title>${title}</title><style>
-            body{font-family:sans-serif; padding:40px; color:#333;}
-            table{width:100%; border-collapse:collapse; margin-top:20px;}
-            th,td{border:1px solid #ddd; padding:12px; text-align:left;}
-            th{background:#f4f4f4;}
-            h2{color:#0f172a; border-bottom:2px solid #38bdf8; padding-bottom:10px;}
-            .footer{margin-top:30px; font-size:12px; color:#666; border-top:1px solid #eee; padding-top:10px;}
-            @media print{.no-print{display:none;}}
-            .btn{padding:10px 20px; background:#059669; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;}
-            </style></head><body>
-            <h2>${title}</h2>
-            <p>Generated on: ${new Date().toLocaleString()}</p>
-            <button class="btn no-print" onclick="window.print()">Print Report (PDF)</button>
-            <table><tr><th>Measurement</th><th>Value</th></tr>${tableRows}</table>
-            <div class="footer">Created by Excavator Geometry Assistant - Mohamed Shehata</div>
-            </body></html>
-        `);
-        win.document.close();
+        const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
     }
 
     function saveHistory(t, r) { let h=JSON.parse(localStorage.getItem('history_'+t)||"[]"); h.unshift({time:new Date().toLocaleString(), data:r}); if(h.length>10)h.pop(); localStorage.setItem('history_'+t, JSON.stringify(h)); }
