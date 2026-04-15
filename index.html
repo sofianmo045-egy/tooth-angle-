@@ -55,7 +55,6 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Styles for Diagrams */
         .diagram-container { width: 100%; background: #fff; padding: 10px 0; text-align: center; }
         .diagram-item {
             margin-bottom: 25px;
@@ -180,7 +179,7 @@
         </div>
 
         <div class="group">
-            <span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSIDE</span>
+            <span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSSIDE</span>
             <div class="input-row">
                 <div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" oninput="autoSave()"></div>
                 <div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" oninput="autoSave()"></div>
@@ -439,7 +438,8 @@
             a2 = getOffsets(d.X2, d.Y2, d.Z2);
             
             if (antH !== null) {
-                hC = mH - antH;
+                // المعدلة المطلوبة: طرح مكنة من انتينة
+                hC = antH - mH;
                 if (hC > 180) hC -= 360; 
                 if (hC < -180) hC += 360;
             }
@@ -541,75 +541,22 @@
     }
 
     function clearPageOnly() {
-        const activeTab = document.querySelector('.tab-content.active');
-        activeTab.querySelectorAll('input').forEach(input => input.value = "");
-        activeTab.querySelectorAll('.results-area b').forEach(b => b.innerText = "N/A");
-        autoSave();
+        document.querySelectorAll('input').forEach(i => i.value = "");
+        document.querySelectorAll('.results-area b').forEach(b => b.innerText = "N/A");
+        document.querySelectorAll('.results-area').forEach(a => a.style.display = "none");
+        localStorage.removeItem('excavator_inputs');
+        localStorage.removeItem('show_res1');
+        localStorage.removeItem('show_res2');
+        alert("Page inputs cleared.");
     }
 
     function resetHistoryOnly() {
-        if (confirm("هل تريد مسح جميع البيانات وسجل العمليات؟")) {
-            localStorage.clear();
-            location.reload();
+        if(confirm("Delete all history?")) {
+            localStorage.removeItem('history_geometry');
+            localStorage.removeItem('history_calibration');
+            alert("History deleted.");
         }
     }
-
-    function generateHTMLReport(title, dataRows) {
-        let rowsHtml = '';
-        dataRows.forEach(row => {
-            if(row.isHeader) {
-                rowsHtml += `<tr><td colspan="2" style="padding:15px 10px 5px 10px; font-weight:bold; color:#10b981; font-size:11px; border-bottom:1px dashed #ddd; text-transform:uppercase;">${row.label}</td></tr>`;
-            } else {
-                rowsHtml += `<tr>
-                    <td style="padding:10px; border-bottom:1px solid #eee; color:#666; font-size:14px;">${row.label}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000; font-size:14px; text-align:right;">${row.value}</td>
-                </tr>`;
-            }
-        });
-        return `<html><head><title>${title}</title><style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:20px;}</style></head>
-        <body><h2 style="color:#0f172a;border-bottom:3px solid #38bdf8;padding-bottom:10px;">${title}</h2><table>${rowsHtml}</table></body></html>`;
-    }
-
-    function exportReport1() {
-        const rows = [
-            {label: "Geometry Summary", isHeader: true},
-            {label: "Machine Heading", value: document.getElementById('out-mH').innerText},
-            {label: "Antenna Heading", value: document.getElementById('out-antH').innerText},
-            {label: "Heading Correction", value: document.getElementById('out-hC').innerText},
-            {label: "Antenna H-Distance", value: document.getElementById('out-antDist').innerText},
-            {label: "Antenna 1 Offsets", isHeader: true},
-            {label: "Forward (Y)", value: document.getElementById('out-a1F').innerText},
-            {label: "Starboard (X)", value: document.getElementById('out-a1S').innerText},
-            {label: "Up (Z)", value: document.getElementById('out-a1U').innerText},
-            {label: "Antenna 2 Offsets", isHeader: true},
-            {label: "Forward (Y)", value: document.getElementById('out-a2F').innerText},
-            {label: "Starboard (X)", value: document.getElementById('out-a2S').innerText},
-            {label: "Up (Z)", value: document.getElementById('out-a2U').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport("Excavator Geometry Report", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Geometry_Report.html'; link.click();
-    }
-
-    function exportReport2() {
-        const rows = [
-            {label: "Geometry Lengths", isHeader: true},
-            {label: "Boom Length", value: document.getElementById('out-boomL_cal').innerText},
-            {label: "Stick Length", value: document.getElementById('out-stickL_cal').innerText},
-            {label: "Boom Stick V (ΔZ)", value: document.getElementById('out-bsv').innerText},
-            {label: "Lever Attachment", isHeader: true},
-            {label: "S2 Offset", value: document.getElementById('out-s2').innerText},
-            {label: "S3 Offset", value: document.getElementById('out-s3').innerText},
-            {label: "S4 Offset", value: document.getElementById('out-s4').innerText},
-            {label: "S5 Offset", value: document.getElementById('out-s5').innerText},
-            {label: "Bucket & Teeth", isHeader: true},
-            {label: "T5 Separation", value: document.getElementById('out-ts').innerText},
-            {label: "T1 Tooth Length", value: document.getElementById('out-t1').innerText},
-            {label: "T6 Tooth Angle", value: document.getElementById('out-t6').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
-    }
 </script>
-
 </body>
 </html>
