@@ -221,6 +221,13 @@
     </div>
 
     <div id="tab-calibration" class="tab-content">
+        <div style="padding: 15px 20px; background: #fff5f5; border-bottom: 1px solid #fee2e2;">
+            <input type="file" id="csvFileInputCal" accept=".csv" style="display: none;" onchange="handleCSV(this)">
+            <button onclick="document.getElementById('csvFileInputCal').click()" style="width:100%; padding:10px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">
+                📂 Import Survey CSV (ID, X, Y, Z)
+            </button>
+        </div>
+
         <div class="main-container">
             <div class="input-block"><span class="block-label" style="color:var(--pds-orange)"><span class="id-badge">BT/BS</span> Boom Pin (Auto-sync)</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label"><span class="id-badge">ST</span> Stick Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_st" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
@@ -502,38 +509,6 @@
             alert("History cleared.");
         }
     }
-
-    function exportHTML(type) {
-        const results = type === 'geometry' ? document.getElementById('resultsMeasurements').innerHTML : document.getElementById('resultsCalibration').innerHTML;
-        const htmlContent = `
-            <html>
-            <head>
-                <title>Excavator Report - ${type}</title>
-                <style>
-                    body { font-family: sans-serif; padding: 20px; color: #333; }
-                    .report-header { background: #0f172a; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-                    .res-line { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-                    b { color: #059669; }
-                    .export-group { display:none; }
-                </style>
-            </head>
-            <body>
-                <div class="report-header">
-                    <h1>Excavator Geometry Report</h1>
-                    <p>Date: ${new Date().toLocaleString()}</p>
-                    <p>Type: ${type.toUpperCase()}</p>
-                </div>
-                ${results}
-            </body>
-            </html>
-        `;
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `Report_${type}_${new Date().getTime()}.html`;
-        link.click();
-    }
 </script>
-
 </body>
 </html>
