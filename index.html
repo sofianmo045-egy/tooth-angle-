@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Excavator Geometry</title>
+    <style>
+        :root {
+            --primary-bg: #0f172a;
+            --accent-blue: #38bdf8;
+            --success-green: #059669;
+            --text-gray: #94a3b8;
+            --pds-orange: #f59e0b;
+            --error-red: #ef4444;
+            --sub-text-gray: #64748b;
+        }
+
+        body { 
+            background-color: #f1f5f9; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            padding: 20px 10px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            box-sizing: border-box;
+        }
+
+        .card { 
+            max-width: 550px; 
+            width: 100%; 
+            background: #fff; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .header { background: var(--primary-bg); color: white; padding: 25px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .header p { margin: 5px 0 0; font-size: 14px; color: var(--sub-text-gray); font-weight: 500; }
+        .header a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
+        .created-by { margin-top: 10px; font-size: 12px; color: #94a3b8; }
+        .support-text { display: block; margin-top: 5px; color: #64748b; font-style: italic; font-size: 11px; }
+
+        .tabs { display: flex; background: #1e293b; border-bottom: 2px solid #334155; }
+        .tab-btn { 
+            flex: 1; padding: 15px 5px; text-align: center; color: var(--text-gray); 
+            background: none; border: none; font-weight: bold; cursor: pointer; 
+            transition: 0.3s; font-size: 12px; text-transform: uppercase;
+        }
+        .tab-btn.active { color: #fff; border-bottom: 3px solid var(--accent-blue); background: var(--primary-bg); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Styles for Diagrams */
+        .diagram-container { width: 100%; background: #fff; padding: 10px 0; text-align: center; }
+        .diagram-item {
+            margin-bottom: 25px;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .diagram-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--primary-bg);
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 8px;
+            text-align: left;
+        }
+        .diagram-container img { 
+            max-width: 95%; 
+            height: auto; 
+            border-radius: 8px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        }
+        
+        .main-container { padding: 20px; }
+        .group { padding: 15px 20px; border-bottom: 1px solid #f1f5f9; }
+        .group-title { font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        
+        .input-block { margin-bottom: 20px; }
+        .block-label { font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 8px; display: block; }
+
+        .input-row { display: flex; gap: 12px; }
+        .input-col { flex: 1; }
+        .input-col label { font-size: 10px; color: #64748b; font-weight: 600; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        .input-col input { 
+            width: 100%; padding: 10px; border: 1.5px solid #e2e8f0; 
+            border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; text-align: center;
+        }
+
+        .calc-btn { 
+            width: calc(100% - 40px); margin: 10px 20px 20px 20px; padding: 16px; 
+            background: var(--success-green); color: white; border: none; 
+            border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; 
+        }
+
+        .results-area { background: var(--primary-bg); color: #f8fafc; padding: 25px 20px; display: none; }
+        .res-line { display: flex; justify-content: space-between; margin: 10px 0; font-size: 14px; border-bottom: 1px solid #1e293b; padding-bottom: 5px; }
+        .res-line b { color: #fff; }
+        .offset-title { color: #10b981; font-size: 10px; font-weight: bold; text-transform: uppercase; margin: 20px 0 10px 0; padding-bottom: 5px; border-bottom: 1px dashed #334155; }
+        .res-section-title { font-size: 11px; font-weight: bold; margin-top: 15px; border-bottom: 1px solid #334155; padding-bottom: 5px;}
+        .ref-tag { font-size: 9px; color: #94a3b8; text-transform: none; margin-left: 5px; font-weight: normal; }
+
+        .export-btn { width: 100%; padding: 14px; background: transparent; color: var(--accent-blue); border: 2px solid var(--accent-blue); border-radius: 10px; margin-top: 20px; cursor: pointer; font-weight: 800; }
+        .report-btn { background: #64748b; color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 20px; }
+        
+        .action-btns-container { display: flex; gap: 8px; margin: 0 20px 20px; }
+        .clear-btn { flex: 1.2; background: #fee2e2; color: #ef4444; border: 1px solid #ef4444; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .history-bottom-btn { flex: 1; background: #1e293b; color: var(--accent-blue); border: 1px solid var(--accent-blue); padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+        .reset-btn { flex: 1.2; background: #334155; color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 11px; text-transform: uppercase; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-content { background: white; margin: 15% auto; padding: 20px; width: 85%; max-width: 400px; border-radius: 15px; max-height: 70vh; overflow-y: auto; }
+        .history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.4; }
+
+        .footer { padding: 25px; font-size: 11px; color: #64748b; text-align: center; background: #fafafa; border-top: 1px solid #eee; }
+        
+        .id-badge { background: #e2e8f0; color: #1e293b; padding: 2px 5px; border-radius: 4px; font-size: 9px; margin-right: 5px; vertical-align: middle; }
+    </style>
+</head>
+<body onload="autoLoad()">
+
+<div class="card">
+    <div class="header">
+        <h1>Excavator Geometry</h1>
+        <p>Calculator and Calibration Assistant</p>
+        <div class="created-by">
+            Created by: <a href="https://linkedin.com/in/mohamed-shehata-m045" target="_blank">Mohamed Shehata</a>
+            <span class="support-text">Get in touch for support</span>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
+        <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
+        <button class="tab-btn" id="btn-diagram" onclick="openTab(event, 'tab-diagram')">Diagram</button>
+    </div>
+
+    <div id="tab-measurements" class="tab-content active">
+        <div style="padding: 15px 20px; background: #fff5f5; border-bottom: 1px solid #fee2e2;">
+            <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCSV(this)">
+            <button onclick="document.getElementById('csvFileInput').click()" style="width:100%; padding:10px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">
+                📂 Import Survey CSV (ID, X, Y, Z)
+            </button>
+        </div>
+
+        <div class="group" style="background: #f8fbff; margin-top:10px;">
+            <span class="group-title"><span class="id-badge">A1</span> ANTENNA 1</span>
+            <div class="input-row">
+                <div class="input-col"><label>X1</label><input type="number" step="0.001" id="X1" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Y1</label><input type="number" step="0.001" id="Y1" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Z1</label><input type="number" step="0.001" id="Z1" class="saveable" oninput="autoSave()"></div>
+            </div>
+        </div>
+
+        <div class="group" style="background: #f8fbff;">
+            <span class="group-title"><span class="id-badge">A2</span> ANTENNA 2</span>
+            <div class="input-row">
+                <div class="input-col"><label>X2</label><input type="number" step="0.001" id="X2" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Y2</label><input type="number" step="0.001" id="Y2" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Z2</label><input type="number" step="0.001" id="Z2" class="saveable" oninput="autoSave()"></div>
+            </div>
+        </div>
+
+        <div class="group">
+            <span class="group-title"><span class="id-badge">BS</span> BOOM PIN STARBOARD</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xs</label><input type="number" step="0.001" id="Xs" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Ys</label><input type="number" step="0.001" id="Ys" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Zs</label><input type="number" step="0.001" id="Zs" class="saveable" oninput="autoSave()"></div>
+            </div>
+        </div>
+
+        <div class="group">
+            <span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSIDE</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable" oninput="autoSave()"></div>
+            </div>
+        </div>
+
+        <div class="group" style="background: #f0fff4;">
+            <span class="group-title"><span class="id-badge">BU</span> BUCKET CENTER</span>
+            <div class="input-row">
+                <div class="input-col"><label>Xb</label><input type="number" step="0.001" id="Xb" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Yb</label><input type="number" step="0.001" id="Yb" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Zb</label><input type="number" step="0.001" id="Zb" class="saveable" oninput="autoSave()"></div>
+            </div>
+        </div>
+
+        <button class="calc-btn" onclick="calcMeasurements()">Calculate Measurements</button>
+
+        <div id="resultsMeasurements" class="results-area">
+            <div style="border-bottom: 2px solid var(--accent-blue); padding-bottom: 10px; font-size: 16px; font-weight: bold; color: var(--accent-blue);">GEOMETRY RESULTS</div>
+            <div class="res-line"><span>Machine Heading:</span> <b id="out-mH">N/A</b></div>
+            <div class="res-line"><span>Antenna Heading:</span> <b id="out-antH">N/A</b></div>
+            <div class="res-line" style="border-left: 3px solid #fcd34d; padding-left: 10px;"><span style="color: #fcd34d;">Heading Correction:</span> <b id="out-hC" style="color: #fcd34d;">N/A</b></div>
+            <div class="res-line"><span>Antenna H-Distance:</span> <b id="out-antDist">N/A</b></div>
+            
+            <div class="offset-title">Antenna 1 - Offsets <span class="ref-tag">(Reference: Boom Pin Center)</span></div>
+            <div class="res-line"><span>Forward (Y):</span> <b id="out-a1F">N/A</b></div>
+            <div class="res-line"><span>Starboard (X):</span> <b id="out-a1S">N/A</b></div>
+            <div class="res-line"><span>Up (Z):</span> <b id="out-a1U">N/A</b></div>
+            
+            <div class="offset-title">Antenna 2 - Offsets <span class="ref-tag">(Reference: Boom Pin Center)</span></div>
+            <div class="res-line"><span>Forward (Y):</span> <b id="out-a2F">N/A</b></div>
+            <div class="res-line"><span>Starboard (X):</span> <b id="out-a2S">N/A</b></div>
+            <div class="res-line"><span>Up (Z):</span> <b id="out-a2U">N/A</b></div>
+            
+            <button class="export-btn" onclick="exportReport1()">Download Geometry Report</button>
+        </div>
+    </div>
+
+    <div id="tab-calibration" class="tab-content">
+        <div class="main-container">
+            <div class="input-block"><span class="block-label" style="color:var(--pds-orange)"><span class="id-badge">BT/BS</span> Boom Pin (Auto-sync)</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable" step="0.001"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">ST</span> Stick Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_st" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">BP</span> Bucket Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bu" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_bu" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_bu" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">S3</span> S3 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s3" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s3" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s3" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">S4</span> S4 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s4" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s4" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s4" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">S5</span> S5 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s5" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s5" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s5" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">T1</span> T1 Teeth</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_t1" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_t1" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_t1" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+        </div>
+
+        <button class="calc-btn" onclick="calcCalibration()">Calculate Calibration</button>
+
+        <div id="resultsCalibration" class="results-area">
+            <div class="res-section-title" style="color: var(--pds-orange);">GEOMETRY LENGTHS</div>
+            <div class="res-line"><span>Boom Length:</span> <b id="out-boomL_cal">N/A</b></div>
+            <div class="res-line"><span>Stick Length:</span> <b id="out-stickL_cal">N/A</b></div>
+            <div class="res-line" style="color:var(--accent-blue)"><span>Boom Stick V (ΔZ):</span> <b id="out-bsv">N/A</b></div>
+            
+            <div class="res-section-title" style="color: var(--pds-orange);">SUPPORT LEVER ATTACHMENT</div>
+            <div class="res-line"><span>S2:</span> <b id="out-s2">N/A</b></div>
+            <div class="res-line"><span>S3:</span> <b id="out-s3">N/A</b></div>
+            <div class="res-line"><span>S4:</span> <b id="out-s4">N/A</b></div>
+            <div class="res-line"><span>S5:</span> <b id="out-s5">N/A</b></div>
+            
+            <div class="res-section-title" style="color: var(--pds-orange);">BUCKET & TEETH</div>
+            <div class="res-line"><span>T5 (Holes separation):</span> <b id="out-ts">N/A</b></div>
+            <div class="res-line"><span>T1:</span> <b id="out-t1">N/A</b></div>
+            <div class="res-line"><span>T6 (Tooth angle):</span> <b id="out-t6" style="color:var(--pds-orange)">N/A</b></div>
+            <button class="report-btn" onclick="exportReport2()">Download Crane Configuration Report</button>
+        </div>
+    </div>
+
+    <div id="tab-diagram" class="tab-content">
+        <div class="main-container">
+            <div class="diagram-container">
+                
+                <div class="diagram-item">
+                    <span class="diagram-label">Reference Points & CSV IDs</span>
+                    <img src="CSV GUIDE.png" alt="CSV Guide">
+                </div>
+
+                <div class="diagram-item">
+                    <span class="diagram-label">General Component Layout</span>
+                    <img src="EX GEO.png" alt="General Diagram">
+                </div>
+
+                <div class="diagram-item">
+                    <span class="diagram-label">Stick Geometry Offsets (S1-S5)</span>
+                    <img src="STICK DIM .png" alt="Stick Dimensions">
+                </div>
+
+                <div class="diagram-item">
+                    <span class="diagram-label">Bucket & Teeth Offsets (T1-T6)</span>
+                    <img src="BUCKET DIM.png" alt="Bucket Dimensions">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="action-btns-container">
+        <button class="clear-btn" onclick="clearPageOnly()">clear page</button>
+        <button class="history-bottom-btn" onclick="showHistoryByActiveTab()">History</button>
+        <button class="reset-btn" onclick="resetHistoryOnly()">reset history</button>
+    </div>
+
+    <div class="footer">
+        <strong>Mobile App Installation:</strong><br>
+        • iOS: Share ➔ Add to Home Screen<br>
+        • Android: Menu ➔ Add to Home screen
+    </div>
+</div>
+
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <h3 id="historyTitle" style="margin-top:0; font-size:16px; color:#1e293b; border-bottom:2px solid #eee; padding-bottom:10px;">History</h3>
+        <div id="historyContent"></div>
+        <button onclick="document.getElementById('historyModal').style.display='none'" class="calc-btn" style="width:100%; margin:15px 0 0 0; padding:12px;">Close</button>
+    </div>
+</div>
+
+<script>
+    const getV = (id) => { const el = document.getElementById(id); return el && el.value !== "" ? parseFloat(el.value) : null; };
+    const format = (val, unit = "") => (val === null || isNaN(val)) ? "N/A" : val.toFixed(3) + unit;
+    function dist3D(p1, p2) { if (!p1 || !p2) return null; return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2)); }
+    function getP(id_p) { const x = getV('x_'+id_p), y = getV('y_'+id_p), z = getV('z_'+id_p); if (x === null || y === null || z === null) return null; return { x, y, z }; }
+
+    function handleCSV(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const rows = e.target.result.split('\n');
+            let matchCount = 0;
+
+            const mapping = {
+                'A1': ['X1', 'Y1', 'Z1'],
+                'A2': ['X2', 'Y2', 'Z2'],
+                'BS': ['Xs', 'Ys', 'Zs'],
+                'BT': ['Xp', 'Yp', 'Zp'],
+                'BU': ['Xb', 'Yb', 'Zb'],
+                'ST': ['x_st', 'y_st', 'z_st'],
+                'BP': ['x_bu', 'y_bu', 'z_bu'],
+                'S3': ['x_s3', 'y_s3', 'z_s3'],
+                'S4': ['x_s4', 'y_s4', 'z_s4'],
+                'S5': ['x_s5', 'y_s5', 'z_s5'],
+                'T1': ['x_t1', 'y_t1', 'z_t1']
+            };
+
+            rows.forEach(row => {
+                const cols = row.split(',').map(c => c.trim().toUpperCase());
+                if (cols.length >= 4) {
+                    const id = cols[0];
+                    if (mapping[id]) {
+                        document.getElementById(mapping[id][0]).value = cols[1];
+                        document.getElementById(mapping[id][1]).value = cols[2];
+                        document.getElementById(mapping[id][2]).value = cols[3];
+                        matchCount++;
+                    }
+                }
+            });
+
+            const xs = getV('Xs'), ys = getV('Ys'), zs = getV('Zs'), xp = getV('Xp'), yp = getV('Yp'), zp = getV('Zp');
+            if (xs !== null && xp !== null) {
+                document.getElementById('x_bp').value = ((xs+xp)/2).toFixed(3);
+                document.getElementById('y_bp').value = ((ys+yp)/2).toFixed(3);
+                document.getElementById('z_bp').value = ((zs+zp)/2).toFixed(3);
+            }
+
+            alert(`Imported ${matchCount} points successfully.`);
+            autoSave();
+        };
+        reader.readAsText(file);
+    }
+
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).className += " active";
+        evt.currentTarget.className += " active";
+        localStorage.setItem('active_tab', tabName);
+    }
+
+    function saveHistory(type, results) {
+        let history = JSON.parse(localStorage.getItem('history_' + type) || "[]");
+        history.unshift({ time: new Date().toLocaleString(), data: results });
+        if(history.length > 10) history.pop();
+        localStorage.setItem('history_' + type, JSON.stringify(history));
+    }
+
+    function showHistoryByActiveTab() {
+        const activeTabId = document.querySelector('.tab-content.active').id;
+        if (activeTabId === 'tab-measurements') {
+            toggleHistory('geometry', 'Geometry History');
+        } else if (activeTabId === 'tab-calibration') {
+            toggleHistory('calibration', 'Calibration History');
+        }
+    }
+
+    function toggleHistory(type, title) {
+        let history = JSON.parse(localStorage.getItem('history_' + type) || "[]");
+        let content = document.getElementById('historyContent');
+        document.getElementById('historyTitle').innerText = title;
+        content.innerHTML = history.length ? "" : "No history found.";
+        history.forEach(item => {
+            let row = `<div class="history-item"><strong>${item.time}</strong><br>`;
+            for (let key in item.data) {
+                row += `${key.replace('out-','')}: ${item.data[key]} | `;
+            }
+            content.innerHTML += row + `</div>`;
+        });
+        document.getElementById('historyModal').style.display = 'block';
+    }
+
+    function calcMeasurements() {
+        const d = {
+            X1: getV('X1'), Y1: getV('Y1'), Z1: getV('Z1'), X2: getV('X2'), Y2: getV('Y2'), Z2: getV('Z2'),
+            Xs: getV('Xs'), Ys: getV('Ys'), Zs: getV('Zs'), Xp: getV('Xp'), Yp: getV('Yp'), Zp: getV('Zp'),
+            Xb: getV('Xb'), Yb: getV('Yb'), Zb: getV('Zb')
+        };
+        
+        let mH = null, hC = null, antDist = null, antH = null;
+        let a1 = {F: null, S: null, U: null}, a2 = {F: null, S: null, U: null};
+
+        if (d.X1 !== null && d.Y1 !== null && d.X2 !== null && d.Y2 !== null) {
+            antDist = Math.sqrt(Math.pow(d.X2 - d.X1, 2) + Math.pow(d.Y2 - d.Y1, 2));
+            const aH_rad = Math.atan2(d.X2 - d.X1, d.Y2 - d.Y1);
+            antH = ((aH_rad * 180) / Math.PI + 360) % 360;
+        }
+
+        if (d.Xp !== null && d.Xs !== null && d.Xb !== null && d.Yb !== null) {
+            const Xc = (d.Xp + d.Xs) / 2, Yc = (d.Yp + d.Ys) / 2, Zc = (d.Zp + d.Zs) / 2;
+            const hR = Math.atan2(d.Xb - Xc, d.Yb - Yc);
+            mH = ((hR * 180) / Math.PI + 360) % 360;
+            
+            const getOffsets = (X, Y, Z) => {
+                if (X === null || Y === null || Z === null) return {F: null, S: null, U: null};
+                return { 
+                    F: (Y - Yc) * Math.cos(hR) + (X - Xc) * Math.sin(hR), 
+                    S: (X - Xc) * Math.cos(hR) - (Y - Yc) * Math.sin(hR), 
+                    U: Z - Zc 
+                };
+            };
+            
+            a1 = getOffsets(d.X1, d.Y1, d.Z1);
+            a2 = getOffsets(d.X2, d.Y2, d.Z2);
+            
+            if (antH !== null) {
+                hC = mH - antH;
+                if (hC > 180) hC -= 360; 
+                if (hC < -180) hC += 360;
+            }
+        }
+
+        const res = {
+            'out-mH': format(mH, "°"),
+            'out-antH': format(antH, "°"),
+            'out-hC': format(hC, "°"),
+            'out-antDist': format(antDist, " m"),
+            'out-a1F': format(a1.F, " m"),
+            'out-a1S': format(a1.S, " m"),
+            'out-a1U': format(a1.U, " m"),
+            'out-a2F': format(a2.F, " m"),
+            'out-a2S': format(a2.S, " m"),
+            'out-a2U': format(a2.U, " m")
+        };
+
+        for (let id in res) {
+            const el = document.getElementById(id);
+            if(el) { el.innerText = res[id]; localStorage.setItem('res_'+id, res[id]); }
+        }
+        document.getElementById('resultsMeasurements').style.display = "block";
+        localStorage.setItem('show_res1', 'true');
+        saveHistory('geometry', res);
+    }
+
+    function calcCalibration() {
+        const BP = getP('bp'), ST = getP('st'), BU = getP('bu'), S3 = getP('s3'), S4 = getP('s4'), S5 = getP('s5'), T1 = getP('t1');
+        const s1 = (ST && BU) ? dist3D(ST, BU) : null;
+        let s3_val = null, s2_val = null, t6_val = null, bsv = null;
+
+        if (BP && ST) bsv = ST.z - BP.z;
+        if (s1 && S3) {
+            const v_st_bu = { x: BU.x - ST.x, y: BU.y - ST.y, z: BU.z - ST.z };
+            const v_st_s3 = { x: S3.x - ST.x, y: S3.y - ST.y, z: S3.z - ST.z };
+            const cp = { x: v_st_s3.y * v_st_bu.z - v_st_s3.z * v_st_bu.y, y: v_st_s3.z * v_st_bu.x - v_st_s3.x * v_st_bu.z, z: v_st_s3.x * v_st_bu.y - v_st_s3.y * v_st_bu.x };
+            s3_val = Math.sqrt(cp.x**2 + cp.y**2 + cp.z**2) / s1;
+            const v_bu_st = { x: ST.x - BU.x, y: ST.y - BU.y, z: ST.z - BU.z };
+            const v_bu_s3 = { x: S3.x - BU.x, y: S3.y - BU.y, z: S3.z - BU.z };
+            s2_val = (v_bu_s3.x * v_bu_st.x + v_bu_s3.y * v_bu_st.y + v_bu_s3.z * v_bu_st.z) / s1; 
+        }
+        if (T1 && BU && S5) {
+            const vT1 = { x: T1.x - BU.x, y: T1.y - BU.y, z: T1.z - BU.z };
+            const vS5 = { x: S5.x - BU.x, y: S5.y - BU.y, z: S5.z - BU.z };
+            const m1 = Math.sqrt(vT1.x**2 + vT1.y**2 + vT1.z**2), m2 = Math.sqrt(vS5.x**2 + vS5.y**2 + vS5.z**2);
+            if (m1 > 0 && m2 > 0) t6_val = Math.acos(Math.max(-1, Math.min(1, (vT1.x * vS5.x + vT1.y * vS5.y + vT1.z * vS5.z) / (m1 * m2)))) * (180 / Math.PI);
+        }
+
+        const res = {
+            'out-boomL_cal': format(dist3D(BP, ST), " m"),
+            'out-stickL_cal': format(s1, " m"),
+            'out-bsv': format(bsv, " m"),
+            'out-s2': format(s2_val, " m"),
+            'out-s3': format(s3_val, " m"),
+            'out-s4': format(dist3D(S3, S4), " m"),
+            'out-s5': format(dist3D(S4, S5), " m"),
+            'out-ts': format(dist3D(BU, S5), " m"), 
+            'out-t1': format(dist3D(T1, BU), " m"), 
+            'out-t6': format(t6_val, "°")
+        };
+
+        for (let id in res) {
+            document.getElementById(id).innerHTML = res[id];
+            localStorage.setItem('res_'+id, res[id]);
+        }
+        document.getElementById('resultsCalibration').style.display = "block";
+        localStorage.setItem('show_res2', 'true');
+        saveHistory('calibration', res);
+    }
+
+    function autoSave() {
+        const inputs = {};
+        document.querySelectorAll('.saveable').forEach(el => { inputs[el.id] = el.value; });
+        localStorage.setItem('excavator_inputs', JSON.stringify(inputs));
+    }
+
+    function autoLoad() {
+        const savedInputs = JSON.parse(localStorage.getItem('excavator_inputs'));
+        if (savedInputs) {
+            for (let id in savedInputs) {
+                const el = document.getElementById(id);
+                if (el) el.value = savedInputs[id];
+            }
+        }
+        const resIds = ['out-mH','out-antH','out-hC','out-antDist','out-a1F','out-a1S','out-a1U','out-a2F','out-a2S','out-a2U','out-boomL_cal','out-stickL_cal','out-bsv','out-s2','out-s3','out-s4','out-s5','out-ts','out-t1','out-t6'];
+        resIds.forEach(id => {
+            const val = localStorage.getItem('res_'+id);
+            if (val) document.getElementById(id).innerHTML = val;
+        });
+        if (localStorage.getItem('show_res1') === 'true') document.getElementById('resultsMeasurements').style.display = "block";
+        if (localStorage.getItem('show_res2') === 'true') document.getElementById('resultsCalibration').style.display = "block";
+        const activeTab = localStorage.getItem('active_tab');
+        if (activeTab) {
+            const btnId = activeTab === 'tab-measurements' ? 'btn-measurements' : (activeTab === 'tab-calibration' ? 'btn-calibration' : 'btn-diagram');
+            const btn = document.getElementById(btnId);
+            if (btn) btn.click();
+        }
+    }
+
+    function clearPageOnly() {
+        const activeTab = document.querySelector('.tab-content.active');
+        activeTab.querySelectorAll('input').forEach(input => input.value = "");
+        activeTab.querySelectorAll('.results-area b').forEach(b => b.innerText = "N/A");
+        autoSave();
+    }
+
+    function resetHistoryOnly() {
+        if (confirm("هل تريد مسح جميع البيانات وسجل العمليات؟")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    function generateHTMLReport(title, dataRows) {
+        let rowsHtml = '';
+        dataRows.forEach(row => {
+            if(row.isHeader) {
+                rowsHtml += `<tr><td colspan="2" style="padding:15px 10px 5px 10px; font-weight:bold; color:#10b981; font-size:11px; border-bottom:1px dashed #ddd; text-transform:uppercase;">${row.label}</td></tr>`;
+            } else {
+                rowsHtml += `<tr>
+                    <td style="padding:10px; border-bottom:1px solid #eee; color:#666; font-size:14px;">${row.label}</td>
+                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000; font-size:14px; text-align:right;">${row.value}</td>
+                </tr>`;
+            }
+        });
+        return `<html><head><title>${title}</title><style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:20px;}</style></head>
+        <body><h2 style="color:#0f172a;border-bottom:3px solid #38bdf8;padding-bottom:10px;">${title}</h2><table>${rowsHtml}</table></body></html>`;
+    }
+
+    function exportReport1() {
+        const rows = [
+            {label: "Geometry Summary", isHeader: true},
+            {label: "Machine Heading", value: document.getElementById('out-mH').innerText},
+            {label: "Antenna Heading", value: document.getElementById('out-antH').innerText},
+            {label: "Heading Correction", value: document.getElementById('out-hC').innerText},
+            {label: "Antenna H-Distance", value: document.getElementById('out-antDist').innerText},
+            {label: "Antenna 1 Offsets", isHeader: true},
+            {label: "Forward (Y)", value: document.getElementById('out-a1F').innerText},
+            {label: "Starboard (X)", value: document.getElementById('out-a1S').innerText},
+            {label: "Up (Z)", value: document.getElementById('out-a1U').innerText},
+            {label: "Antenna 2 Offsets", isHeader: true},
+            {label: "Forward (Y)", value: document.getElementById('out-a2F').innerText},
+            {label: "Starboard (X)", value: document.getElementById('out-a2S').innerText},
+            {label: "Up (Z)", value: document.getElementById('out-a2U').innerText}
+        ];
+        const blob = new Blob([generateHTMLReport("Excavator Geometry Report", rows)], {type: 'text/html'});
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Geometry_Report.html'; link.click();
+    }
+
+    function exportReport2() {
+        const rows = [
+            {label: "Geometry Lengths", isHeader: true},
+            {label: "Boom Length", value: document.getElementById('out-boomL_cal').innerText},
+            {label: "Stick Length", value: document.getElementById('out-stickL_cal').innerText},
+            {label: "Boom Stick V (ΔZ)", value: document.getElementById('out-bsv').innerText},
+            {label: "Lever Attachment", isHeader: true},
+            {label: "S2 Offset", value: document.getElementById('out-s2').innerText},
+            {label: "S3 Offset", value: document.getElementById('out-s3').innerText},
+            {label: "S4 Offset", value: document.getElementById('out-s4').innerText},
+            {label: "S5 Offset", value: document.getElementById('out-s5').innerText},
+            {label: "Bucket & Teeth", isHeader: true},
+            {label: "T5 Separation", value: document.getElementById('out-ts').innerText},
+            {label: "T1 Tooth Length", value: document.getElementById('out-t1').innerText},
+            {label: "T6 Tooth Angle", value: document.getElementById('out-t6').innerText}
+        ];
+        const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
+        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
+    }
+</script>
+
+</body>
+</html>
