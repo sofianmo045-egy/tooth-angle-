@@ -439,7 +439,7 @@
             a2 = getOffsets(d.X2, d.Y2, d.Z2);
             
             if (antH !== null) {
-                hC = mH - antH;
+                hC = (mH - antH) + 180;
                 if (hC > 180) hC -= 360; 
                 if (hC < -180) hC += 360;
             }
