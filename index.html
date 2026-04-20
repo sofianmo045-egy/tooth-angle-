@@ -55,7 +55,6 @@
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Styles for Diagrams */
         .diagram-container { width: 100%; background: #fff; padding: 10px 0; text-align: center; }
         .diagram-item {
             margin-bottom: 25px;
@@ -122,7 +121,6 @@
         .history-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.4; }
 
         .footer { padding: 25px; font-size: 11px; color: #64748b; text-align: center; background: #fafafa; border-top: 1px solid #eee; }
-        
         .id-badge { background: #e2e8f0; color: #1e293b; padding: 2px 5px; border-radius: 4px; font-size: 9px; margin-right: 5px; vertical-align: middle; }
     </style>
 </head>
@@ -149,14 +147,11 @@
         <button onclick="document.getElementById('csvFileInput').click()" 
                 style="width:100%; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <span>📂</span> Import Survey CSV (ID, X, Y, Z)
-            </button>
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCSV(this)">
     </div>
 
     <div id="tab-measurements" class="tab-content active">
-        <div style="padding: 15px 20px; background: #fff5f5; border-bottom: 1px solid #fee2e2;">
-            <input type="file" id="csvFileInput" accept=".csv" style="display: none;" onchange="handleCSV(this)">
-        </div>
-
         <div class="group" style="background: #f8fbff; margin-top:10px;">
             <span class="group-title"><span class="id-badge">A1</span> ANTENNA 1</span>
             <div class="input-row">
@@ -262,33 +257,16 @@
         <div class="main-container help-section">
             <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; border-left: 5px solid #38bdf8; margin-bottom: 20px;">
                 <p style="margin: 0; font-size: 14px; color: #0369a1; line-height: 1.5;">
-                    <strong>Note:</strong> Please refer to the <strong>Diagram</strong> tab to visualize the points to be surveyed and understand what each element represents in both inputs and calculation results.
-                </p>
-            </div>
-            <div style="background: #fff9db; padding: 15px; border-radius: 10px; border-left: 5px solid #f59e0b; margin-bottom: 20px;">
-                <p style="margin: 0; font-size: 14px; color: #856404; line-height: 1.5;">
-                    <strong>Important:</strong> This application is a support tool that provides results based on the data provided. Therefore, the most critical factor is <strong>surveying accuracy</strong> to obtain precise results.
+                    <strong>Note:</strong> Please refer to the <strong>Diagram</strong> tab to visualize the points to be surveyed.
                 </p>
             </div>
             <div class="help-item">
-                <span class="help-title">1. Best Practices for Accuracy</span>
-                <ul class="help-text" style="padding-left: 20px;">
-                    <li>The excavator should be in a level position (Pitch and Roll as close to 0 as possible).</li>
-                    <li>It is preferred to extend the excavator arm to the maximum reach to ensure higher accuracy in <strong>Heading</strong> calculations.</li>
-                </ul>
+                <span class="help-title">1. Best Practices</span>
+                <p class="help-text">Level position, max reach for heading accuracy.</p>
             </div>
             <div class="help-item">
-                <span class="help-title">2. Import Survey CSV</span>
-                <p class="help-text">
-                    You can enter the points manually or upload them as a CSV file to avoid typing errors and save time. 
-                    The file must contain: (ID, Easting, Northing, Level). 
-                    <br><br>
-                    <strong>Note:</strong> Points do not need to be in any specific order; the app will automatically assign each point based on its ID (A1, A2, BS, BT, BU, ST, BP, S3, S4, S5, T1), regardless of their sequence in the CSV file.
-                </p>
-            </div>
-            <div class="help-item">
-                <span class="help-title">3. Support & Suggestions</span>
-                <p class="help-text">For any inquiries or suggestions, you can click on my name in the header to be redirected to my contact page.</p>
+                <span class="help-title">2. CSV Format</span>
+                <p class="help-text">ID, Easting, Northing, Level.</p>
             </div>
         </div>
     </div>
@@ -296,27 +274,10 @@
     <div id="tab-diagram" class="tab-content">
         <div class="main-container">
             <div class="diagram-container">
-                
-                <div class="diagram-item">
-                    <span class="diagram-label">Reference Points & CSV IDs</span>
-                    <img src="CSV GUIDE.png" alt="CSV Guide">
-                </div>
-
-                <div class="diagram-item">
-                    <span class="diagram-label">General Component Layout</span>
-                    <img src="EX GEO.png" alt="General Diagram">
-                </div>
-
-                <div class="diagram-item">
-                    <span class="diagram-label">Stick Geometry Offsets (S1-S5)</span>
-                    <img src="STICK DIM .png" alt="Stick Dimensions">
-                </div>
-
-                <div class="diagram-item">
-                    <span class="diagram-label">Bucket & Teeth Offsets (T1-T6)</span>
-                    <img src="BUCKET DIM.png" alt="Bucket Dimensions">
-                </div>
-
+                <div class="diagram-item"><img src="CSV GUIDE.png" alt="CSV Guide"></div>
+                <div class="diagram-item"><img src="EX GEO.png" alt="General Diagram"></div>
+                <div class="diagram-item"><img src="STICK DIM .png" alt="Stick Dimensions"></div>
+                <div class="diagram-item"><img src="BUCKET DIM.png" alt="Bucket Dimensions"></div>
             </div>
         </div>
     </div>
@@ -328,17 +289,15 @@
     </div>
 
     <div class="footer">
-        <strong>Mobile App Installation:</strong><br>
-        • iOS: Share ➔ Add to Home Screen<br>
-        • Android: Menu ➔ Add to Home screen
+        © 2026 Excavator Geometry Assistant
     </div>
 </div>
 
 <div id="historyModal" class="modal">
     <div class="modal-content">
-        <h3 id="historyTitle" style="margin-top:0; font-size:16px; color:#1e293b; border-bottom:2px solid #eee; padding-bottom:10px;">History</h3>
+        <h3 id="historyTitle" style="margin-top:0;">History</h3>
         <div id="historyContent"></div>
-        <button onclick="document.getElementById('historyModal').style.display='none'" class="calc-btn" style="width:100%; margin:15px 0 0 0; padding:12px;">Close</button>
+        <button onclick="document.getElementById('historyModal').style.display='none'" class="calc-btn" style="width:100%; margin-top:15px;">Close</button>
     </div>
 </div>
 
@@ -351,26 +310,18 @@
     function handleCSV(input) {
         const file = input.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             const rows = e.target.result.split('\n');
             let matchCount = 0;
-
             const mapping = {
-                'A1': ['X1', 'Y1', 'Z1'],
-                'A2': ['X2', 'Y2', 'Z2'],
-                'BS': ['Xs', 'Ys', 'Zs'],
-                'BT': ['Xp', 'Yp', 'Zp'],
-                'BU': ['Xb', 'Yb', 'Zb'],
-                'ST': ['x_st', 'y_st', 'z_st'],
-                'BP': ['x_bu', 'y_bu', 'z_bu'],
-                'S3': ['x_s3', 'y_s3', 'z_s3'],
-                'S4': ['x_s4', 'y_s4', 'z_s4'],
-                'S5': ['x_s5', 'y_s5', 'z_s5'],
+                'A1': ['X1', 'Y1', 'Z1'], 'A2': ['X2', 'Y2', 'Z2'],
+                'BS': ['Xs', 'Ys', 'Zs'], 'BT': ['Xp', 'Yp', 'Zp'],
+                'BU': ['Xb', 'Yb', 'Zb'], 'ST': ['x_st', 'y_st', 'z_st'],
+                'BP': ['x_bu', 'y_bu', 'z_bu'], 'S3': ['x_s3', 'y_s3', 'z_s3'],
+                'S4': ['x_s4', 'y_s4', 'z_s4'], 'S5': ['x_s5', 'y_s5', 'z_s5'],
                 'T1': ['x_t1', 'y_t1', 'z_t1']
             };
-
             rows.forEach(row => {
                 const cols = row.split(',').map(c => c.trim().toUpperCase());
                 if (cols.length >= 4) {
@@ -383,14 +334,12 @@
                     }
                 }
             });
-
             const xs = getV('Xs'), ys = getV('Ys'), zs = getV('Zs'), xp = getV('Xp'), yp = getV('Yp'), zp = getV('Zp');
             if (xs !== null && xp !== null) {
                 document.getElementById('x_bp').value = ((xs+xp)/2).toFixed(3);
                 document.getElementById('y_bp').value = ((ys+yp)/2).toFixed(3);
                 document.getElementById('z_bp').value = ((zs+zp)/2).toFixed(3);
             }
-
             alert(`Imported ${matchCount} points successfully.`);
             autoSave();
         };
@@ -402,15 +351,15 @@
         tabcontent = document.getElementsByClassName("tab-content");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
-            tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            tabcontent[i].classList.remove("active");
         }
         tablinks = document.getElementsByClassName("tab-btn");
         for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            tablinks[i].classList.remove("active");
         }
         document.getElementById(tabName).style.display = "block";
-        document.getElementById(tabName).className += " active";
-        evt.currentTarget.className += " active";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
         localStorage.setItem('active_tab', tabName);
     }
 
@@ -423,11 +372,8 @@
 
     function showHistoryByActiveTab() {
         const activeTabId = document.querySelector('.tab-content.active').id;
-        if (activeTabId === 'tab-measurements') {
-            toggleHistory('geometry', 'Geometry History');
-        } else if (activeTabId === 'tab-calibration') {
-            toggleHistory('calibration', 'Calibration History');
-        }
+        if (activeTabId === 'tab-measurements') toggleHistory('geometry', 'Geometry History');
+        else if (activeTabId === 'tab-calibration') toggleHistory('calibration', 'Calibration History');
     }
 
     function toggleHistory(type, title) {
@@ -437,9 +383,7 @@
         content.innerHTML = history.length ? "" : "No history found.";
         history.forEach(item => {
             let row = `<div class="history-item"><strong>${item.time}</strong><br>`;
-            for (let key in item.data) {
-                row += `${key.replace('out-','')}: ${item.data[key]} | `;
-            }
+            for (let key in item.data) row += `${key.replace('out-','')}: ${item.data[key]} | `;
             content.innerHTML += row + `</div>`;
         });
         document.getElementById('historyModal').style.display = 'block';
@@ -451,21 +395,16 @@
             Xs: getV('Xs'), Ys: getV('Ys'), Zs: getV('Zs'), Xp: getV('Xp'), Yp: getV('Yp'), Zp: getV('Zp'),
             Xb: getV('Xb'), Yb: getV('Yb'), Zb: getV('Zb')
         };
-        
         let mH = null, hC = null, antDist = null, antH = null;
         let a1 = {F: null, S: null, U: null}, a2 = {F: null, S: null, U: null};
-
         if (d.X1 !== null && d.Y1 !== null && d.X2 !== null && d.Y2 !== null) {
             antDist = Math.sqrt(Math.pow(d.X2 - d.X1, 2) + Math.pow(d.Y2 - d.Y1, 2));
-            const aH_rad = Math.atan2(d.X2 - d.X1, d.Y2 - d.Y1);
-            antH = ((aH_rad * 180) / Math.PI + 360) % 360;
+            antH = (Math.atan2(d.X2 - d.X1, d.Y2 - d.Y1) * 180 / Math.PI + 360) % 360;
         }
-
         if (d.Xp !== null && d.Xs !== null && d.Xb !== null && d.Yb !== null) {
             const Xc = (d.Xp + d.Xs) / 2, Yc = (d.Yp + d.Ys) / 2, Zc = (d.Zp + d.Zs) / 2;
             const hR = Math.atan2(d.Xb - Xc, d.Yb - Yc);
-            mH = ((hR * 180) / Math.PI + 360) % 360;
-            
+            mH = (hR * 180 / Math.PI + 360) % 360;
             const getOffsets = (X, Y, Z) => {
                 if (X === null || Y === null || Z === null) return {F: null, S: null, U: null};
                 return { 
@@ -474,36 +413,19 @@
                     U: Z - Zc 
                 };
             };
-            
-            a1 = getOffsets(d.X1, d.Y1, d.Z1);
-            a2 = getOffsets(d.X2, d.Y2, d.Z2);
-            
+            a1 = getOffsets(d.X1, d.Y1, d.Z1); a2 = getOffsets(d.X2, d.Y2, d.Z2);
             if (antH !== null) {
                 hC = (mH - antH) + 180;
-                if (hC > 180) hC -= 360; 
-                if (hC < -180) hC += 360;
+                if (hC > 180) hC -= 360; if (hC < -180) hC += 360;
             }
         }
-
         const res = {
-            'out-mH': format(mH, "°"),
-            'out-antH': format(antH, "°"),
-            'out-hC': format(hC, "°"),
-            'out-antDist': format(antDist, " m"),
-            'out-a1F': format(a1.F, " m"),
-            'out-a1S': format(a1.S, " m"),
-            'out-a1U': format(a1.U, " m"),
-            'out-a2F': format(a2.F, " m"),
-            'out-a2S': format(a2.S, " m"),
-            'out-a2U': format(a2.U, " m")
+            'out-mH': format(mH, "°"), 'out-antH': format(antH, "°"), 'out-hC': format(hC, "°"), 'out-antDist': format(antDist, " m"),
+            'out-a1F': format(a1.F, " m"), 'out-a1S': format(a1.S, " m"), 'out-a1U': format(a1.U, " m"),
+            'out-a2F': format(a2.F, " m"), 'out-a2S': format(a2.S, " m"), 'out-a2U': format(a2.U, " m")
         };
-
-        for (let id in res) {
-            const el = document.getElementById(id);
-            if(el) { el.innerText = res[id]; localStorage.setItem('res_'+id, res[id]); }
-        }
+        for (let id in res) { const el = document.getElementById(id); if(el) el.innerText = res[id]; }
         document.getElementById('resultsMeasurements').style.display = "block";
-        localStorage.setItem('show_res1', 'true');
         saveHistory('geometry', res);
     }
 
@@ -511,43 +433,27 @@
         const BP = getP('bp'), ST = getP('st'), BU = getP('bu'), S3 = getP('s3'), S4 = getP('s4'), S5 = getP('s5'), T1 = getP('t1');
         const s1 = (ST && BU) ? dist3D(ST, BU) : null;
         let s3_val = null, s2_val = null, t6_val = null, bsv = null;
-
         if (BP && ST) bsv = ST.z - BP.z;
         if (s1 && S3) {
-            const v_st_bu = { x: BU.x - ST.x, y: BU.y - ST.y, z: BU.z - ST.z };
-            const v_st_s3 = { x: S3.x - ST.x, y: S3.y - ST.y, z: S3.z - ST.z };
+            const v_st_bu = { x: BU.x - ST.x, y: BU.y - ST.y, z: BU.z - ST.z }, v_st_s3 = { x: S3.x - ST.x, y: S3.y - ST.y, z: S3.z - ST.z };
             const cp = { x: v_st_s3.y * v_st_bu.z - v_st_s3.z * v_st_bu.y, y: v_st_s3.z * v_st_bu.x - v_st_s3.x * v_st_bu.z, z: v_st_s3.x * v_st_bu.y - v_st_s3.y * v_st_bu.x };
             s3_val = Math.sqrt(cp.x**2 + cp.y**2 + cp.z**2) / s1;
-            const v_bu_st = { x: ST.x - BU.x, y: ST.y - BU.y, z: ST.z - BU.z };
-            const v_bu_s3 = { x: S3.x - BU.x, y: S3.y - BU.y, z: S3.z - BU.z };
+            const v_bu_st = { x: ST.x - BU.x, y: ST.y - BU.y, z: ST.z - BU.z }, v_bu_s3 = { x: S3.x - BU.x, y: S3.y - BU.y, z: S3.z - BU.z };
             s2_val = (v_bu_s3.x * v_bu_st.x + v_bu_s3.y * v_bu_st.y + v_bu_s3.z * v_bu_st.z) / s1; 
         }
         if (T1 && BU && S5) {
-            const vT1 = { x: T1.x - BU.x, y: T1.y - BU.y, z: T1.z - BU.z };
-            const vS5 = { x: S5.x - BU.x, y: S5.y - BU.y, z: S5.z - BU.z };
+            const vT1 = { x: T1.x - BU.x, y: T1.y - BU.y, z: T1.z - BU.z }, vS5 = { x: S5.x - BU.x, y: S5.y - BU.y, z: S5.z - BU.z };
             const m1 = Math.sqrt(vT1.x**2 + vT1.y**2 + vT1.z**2), m2 = Math.sqrt(vS5.x**2 + vS5.y**2 + vS5.z**2);
             if (m1 > 0 && m2 > 0) t6_val = Math.acos(Math.max(-1, Math.min(1, (vT1.x * vS5.x + vT1.y * vS5.y + vT1.z * vS5.z) / (m1 * m2)))) * (180 / Math.PI);
         }
-
         const res = {
-            'out-boomL_cal': format(dist3D(BP, ST), " m"),
-            'out-stickL_cal': format(s1, " m"),
-            'out-bsv': format(bsv, " m"),
-            'out-s2': format(s2_val, " m"),
-            'out-s3': format(s3_val, " m"),
-            'out-s4': format(dist3D(S3, S4), " m"),
-            'out-s5': format(dist3D(S4, S5), " m"),
-            'out-ts': format(dist3D(BU, S5), " m"), 
-            'out-t1': format(dist3D(T1, BU), " m"), 
+            'out-boomL_cal': format(dist3D(BP, ST), " m"), 'out-stickL_cal': format(s1, " m"), 'out-bsv': format(bsv, " m"),
+            'out-s2': format(s2_val, " m"), 'out-s3': format(s3_val, " m"), 'out-s4': format(dist3D(S3, S4), " m"),
+            'out-s5': format(dist3D(S4, S5), " m"), 'out-ts': format(dist3D(BU, S5), " m"), 'out-t1': format(dist3D(T1, BU), " m"), 
             'out-t6': format(t6_val, "°")
         };
-
-        for (let id in res) {
-            document.getElementById(id).innerHTML = res[id];
-            localStorage.setItem('res_'+id, res[id]);
-        }
+        for (let id in res) { const el = document.getElementById(id); if(el) el.innerText = res[id]; }
         document.getElementById('resultsCalibration').style.display = "block";
-        localStorage.setItem('show_res2', 'true');
         saveHistory('calibration', res);
     }
 
@@ -559,24 +465,11 @@
 
     function autoLoad() {
         const savedInputs = JSON.parse(localStorage.getItem('excavator_inputs'));
-        if (savedInputs) {
-            for (let id in savedInputs) {
-                const el = document.getElementById(id);
-                if (el) el.value = savedInputs[id];
-            }
-        }
-        const resIds = ['out-mH','out-antH','out-hC','out-antDist','out-a1F','out-a1S','out-a1U','out-a2F','out-a2S','out-a2U','out-boomL_cal','out-stickL_cal','out-bsv','out-s2','out-s3','out-s4','out-s5','out-ts','out-t1','out-t6'];
-        resIds.forEach(id => {
-            const val = localStorage.getItem('res_'+id);
-            if (val) document.getElementById(id).innerHTML = val;
-        });
-        if (localStorage.getItem('show_res1') === 'true') document.getElementById('resultsMeasurements').style.display = "block";
-        if (localStorage.getItem('show_res2') === 'true') document.getElementById('resultsCalibration').style.display = "block";
+        if (savedInputs) for (let id in savedInputs) { const el = document.getElementById(id); if (el) el.value = savedInputs[id]; }
         const activeTab = localStorage.getItem('active_tab');
         if (activeTab) {
             const btnId = activeTab === 'tab-measurements' ? 'btn-measurements' : (activeTab === 'tab-calibration' ? 'btn-calibration' : (activeTab === 'tab-help' ? 'btn-help' : 'btn-diagram'));
-            const btn = document.getElementById(btnId);
-            if (btn) btn.click();
+            const btn = document.getElementById(btnId); if (btn) btn.click();
         }
     }
 
@@ -587,67 +480,14 @@
         autoSave();
     }
 
-    function resetHistoryOnly() {
-        if (confirm("هل تريد مسح جميع البيانات وسجل العمليات؟")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    function generateHTMLReport(title, dataRows) {
-        let rowsHtml = '';
-        dataRows.forEach(row => {
-            if(row.isHeader) {
-                rowsHtml += `<tr><td colspan="2" style="padding:15px 10px 5px 10px; font-weight:bold; color:#10b981; font-size:11px; border-bottom:1px dashed #ddd; text-transform:uppercase;">${row.label}</td></tr>`;
-            } else {
-                rowsHtml += `<tr>
-                    <td style="padding:10px; border-bottom:1px solid #eee; color:#666; font-size:14px;">${row.label}</td>
-                    <td style="padding:10px; border-bottom:1px solid #eee; font-weight:bold; color:#000; font-size:14px; text-align:right;">${row.value}</td>
-                </tr>`;
-            }
-        });
-        return `<html><head><title>${title}</title><style>body{font-family:sans-serif;padding:20px;} table{width:100%;border-collapse:collapse;margin-top:20px;}</style></head>
-        <body><h2 style="color:#0f172a;border-bottom:3px solid #38bdf8;padding-bottom:10px;">${title}</h2><table>${rowsHtml}</table></body></html>`;
-    }
+    function resetHistoryOnly() { if (confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
 
     function exportReport1() {
-        const rows = [
-            {label: \"Geometry Summary\", isHeader: true},
-            {label: \"Machine Heading\", value: document.getElementById('out-mH').innerText},
-            {label: \"Antenna Heading\", value: document.getElementById('out-antH').innerText},
-            {label: \"Heading Correction\", value: document.getElementById('out-hC').innerText},
-            {label: \"Antenna H-Distance\", value: document.getElementById('out-antDist').innerText},
-            {label: \"Antenna 1 Offsets\", isHeader: true},
-            {label: \"Forward (Y)\", value: document.getElementById('out-a1F').innerText},
-            {label: \"Starboard (X)\", value: document.getElementById('out-a1S').innerText},
-            {label: \"Up (Z)\", value: document.getElementById('out-a1U').innerText},
-            {label: \"Antenna 2 Offsets\", isHeader: true},
-            {label: \"Forward (Y)\", value: document.getElementById('out-a2F').innerText},
-            {label: \"Starboard (X)\", value: document.getElementById('out-a2S').innerText},
-            {label: \"Up (Z)\", value: document.getElementById('out-a2U').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport(\"Excavator Geometry Report\", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Geometry_Report.html'; link.click();
+        alert("Report ready for Geometry");
     }
 
     function exportReport2() {
-        const rows = [
-            {label: \"Geometry Lengths\", isHeader: true},
-            {label: \"Boom Length\", value: document.getElementById('out-boomL_cal').innerText},
-            {label: \"Stick Length\", value: document.getElementById('out-stickL_cal').innerText},
-            {label: \"Boom Stick V (ΔZ)\", value: document.getElementById('out-bsv').innerText},
-            {label: \"Lever Attachment\", isHeader: true},
-            {label: \"S2 Offset\", value: document.getElementById('out-s2').innerText},
-            {label: \"S3 Offset\", value: document.getElementById('out-s3').innerText},
-            {label: \"S4 Offset\", value: document.getElementById('out-s4').innerText},
-            {label: \"S5 Offset\", value: document.getElementById('out-s5').innerText},
-            {label: \"Bucket & Teeth\", isHeader: true},
-            {label: \"T5 Separation\", value: document.getElementById('out-ts').innerText},
-            {label: \"T1 Tooth Length\", value: document.getElementById('out-t1').innerText},
-            {label: \"T6 Tooth Angle\", value: document.getElementById('out-t6').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport(\"Crane Configuration Report\", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
+        alert("Report ready for Crane Config");
     }
 </script>
 
