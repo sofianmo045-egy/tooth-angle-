@@ -145,11 +145,11 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
-        <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
-        <button class="tab-btn" id="btn-help" onclick="openTab(event, 'tab-help')">Help</button>
-        <button class="tab-btn" id="btn-diagram" onclick="openTab(event, 'tab-diagram')">Diagram</button>
-    </div>
+    <button class="tab-btn active" id="btn-measurements" onclick="openTab(event, 'tab-measurements')">Geometry</button>
+    <button class="tab-btn" id="btn-calibration" onclick="openTab(event, 'tab-calibration')">Crane Config</button>
+    <button class="tab-btn" id="btn-diagram" onclick="openTab(event, 'tab-diagram')">Diagram</button>
+    <button class="tab-btn" id="btn-help" onclick="openTab(event, 'tab-help')">Help</button>
+</div>
 
     <div class="import-section" style="margin-top: 10px; padding: 0 10px;">
         <button onclick="document.getElementById('csvFileInput').click()" 
@@ -263,8 +263,31 @@
             <button class="report-btn" onclick="exportReport2()">Download Crane Configuration Report</button>
         </div>
     </div>
+     
+    <div id="tab-diagram" class="tab-content">
+        <div class="main-container">
+            <div class="diagram-container">
+                <div class="diagram-item">
+                    <span class="diagram-label">Reference Points & CSV IDs</span>
+                    <img src="CSV GUIDE.png" alt="CSV Guide">
+                </div>
+                <div class="diagram-item">
+                    <span class="diagram-label">General Component Layout</span>
+                    <img src="EX GEO.png" alt="General Diagram">
+                </div>
+                <div class="diagram-item">
+                    <span class="diagram-label">Stick Geometry Offsets (S1-S5)</span>
+                    <img src="STICK DIM .png" alt="Stick Dimensions">
+                </div>
+                <div class="diagram-item">
+                    <span class="diagram-label">Bucket & Teeth Offsets (T1-T6)</span>
+                    <img src="BUCKET DIM.png" alt="Bucket Dimensions">
+                </div>
+            </div>
+        </div>
+    </div>
 
-       <div id="tab-help" class="tab-content">
+    <div id="tab-help" class="tab-content">
     <div class="main-container help-section">
         
         <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; border-left: 5px solid #38bdf8; margin-bottom: 20px;">
@@ -310,29 +333,7 @@
         </div>
     </div>
 </div>
-    <div id="tab-diagram" class="tab-content">
-        <div class="main-container">
-            <div class="diagram-container">
-                <div class="diagram-item">
-                    <span class="diagram-label">Reference Points & CSV IDs</span>
-                    <img src="CSV GUIDE.png" alt="CSV Guide">
-                </div>
-                <div class="diagram-item">
-                    <span class="diagram-label">General Component Layout</span>
-                    <img src="EX GEO.png" alt="General Diagram">
-                </div>
-                <div class="diagram-item">
-                    <span class="diagram-label">Stick Geometry Offsets (S1-S5)</span>
-                    <img src="STICK DIM .png" alt="Stick Dimensions">
-                </div>
-                <div class="diagram-item">
-                    <span class="diagram-label">Bucket & Teeth Offsets (T1-T6)</span>
-                    <img src="BUCKET DIM.png" alt="Bucket Dimensions">
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="action-btns-container">
         <button class="clear-btn" onclick="clearPageOnly()">clear page</button>
         <button class="history-bottom-btn" onclick="showHistoryByActiveTab()">History</button>
