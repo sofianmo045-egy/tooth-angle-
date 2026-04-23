@@ -597,11 +597,29 @@
     }
 
     function clearPageOnly() {
-        const activeTab = document.querySelector('.tab-content.active');
-        activeTab.querySelectorAll('input').forEach(input => input.value = "");
-        activeTab.querySelectorAll('.results-area b').forEach(b => b.innerText = "N/A");
-        autoSave();
+    const activeTab = document.querySelector('.tab-content.active');
+    const activeTabId = activeTab.id;
+
+    // 1. Clear input values from the screen
+    activeTab.querySelectorAll('input').forEach(input => input.value = "");
+    
+    // 2. Reset results text to N/A
+    activeTab.querySelectorAll('.results-area b').forEach(b => b.innerText = "N/A");
+
+    // 3. Remove stored data from localStorage based on active tab
+    if (activeTabId === 'tab-measurements') {
+        const resIds1 = ['out-mH','out-antH','out-hC','out-antDist','out-a1F','out-a1S','out-a1U','out-a2F','out-a2S','out-a2U'];
+        resIds1.forEach(id => localStorage.removeItem('res_' + id));
+        localStorage.setItem('show_res1', 'false'); 
+    } else if (activeTabId === 'tab-calibration') {
+        const resIds2 = ['out-boomL_cal','out-stickL_cal','out-bsv','out-s2','out-s3','out-s4','out-s5','out-ts','out-t1','out-t6'];
+        resIds2.forEach(id => localStorage.removeItem('res_' + id));
+        localStorage.setItem('show_res2', 'false');
     }
+
+    // 4. Update the saved inputs state
+    autoSave();
+}
 
     function resetHistoryOnly() {
         if (confirm("Clear all data and operation history?")) {
