@@ -12,11 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Excavator Geometry</title>
-    <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#0f172a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         :root {
             --primary-bg: #0f172a;
@@ -709,13 +704,6 @@
         const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
         const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
     }
-</script>
-
-    <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log("Service Worker Registered"));
-  }
 </script>
 
     <script>
