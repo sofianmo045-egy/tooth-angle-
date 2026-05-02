@@ -148,25 +148,7 @@
     <div style="margin-top: 30px; width: 35px; height: 35px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #38bdf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
 </div>
 
-    <!-- Survey Info Section -->
-<div class="survey-info-container" style="margin: 0 20px 20px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
-    <div style="display: flex; flex-direction: column; gap: 10px;">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="font-size: 11px; font-weight: 800; color: #475569;">SURVEYOR NAME:</label>
-            <input type="text" id="surveyor_name" class="saveable" placeholder="EX." style="width: 60%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px;" oninput="autoSave()">
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="font-size: 11px; font-weight: 800; color: #475569;">MODEL:</label>
-            <input type="text" id="machine_model" class="saveable" placeholder="EX." style="width: 60%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px;" oninput="autoSave()">
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <label style="font-size: 11px; font-weight: 800; color: #475569;">EX NO.:</label>
-            <input type="text" id="machine_no" class="saveable" placeholder="EX." style="width: 60%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px;" oninput="autoSave()">
-        </div>
-    </div>
-</div>
-
-<style>
+   <style>
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -378,6 +360,26 @@
         <button class="reset-btn" onclick="resetHistoryOnly()">reset history</button>
     </div>
 
+    <!-- Survey Info Section - Fixed Layout -->
+<div class="survey-info-container" style="margin: 0 20px 20px; padding: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box;">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-size: 10px; font-weight: 800; color: #475569; white-space: nowrap; width: 100px;">SURVEYOR NAME:</label>
+            <input type="text" id="surveyor_name" class="saveable" placeholder="Enter Name" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-size: 10px; font-weight: 800; color: #475569; white-space: nowrap; width: 100px;">MACHINE MODEL:</label>
+            <input type="text" id="machine_model" class="saveable" placeholder="e.g. CAT 349" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label style="font-size: 10px; font-weight: 800; color: #475569; white-space: nowrap; width: 100px;">EXCAVATOR NO:</label>
+            <input type="text" id="machine_no" class="saveable" placeholder="e.g. EX-05" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
+        </div>
+    </div>
+</div>
+    
     <div class="footer">
         <strong>To Install as Mobile App:</strong><br>
         • iOS: Tap Share ➔ Add to Home Screen<br>
