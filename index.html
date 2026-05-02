@@ -370,12 +370,12 @@
         
         <div style="display: flex; align-items: center; gap: 10px;">
             <label style="font-size: 10px; font-weight: 800; color: #475569; white-space: nowrap; width: 100px;">MACHINE MODEL:</label>
-            <input type="text" id="machine_model" class="saveable" placeholder="e.g. CAT 349" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
+            <input type="text" id="machine_model" class="saveable" placeholder="Enter Model" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
         </div>
         
         <div style="display: flex; align-items: center; gap: 10px;">
             <label style="font-size: 10px; font-weight: 800; color: #475569; white-space: nowrap; width: 100px;">MACHINE NO.:</label>
-            <input type="text" id="machine_no" class="saveable" placeholder="e.g. EX-05" style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
+            <input type="text" id="machine_no" class="saveable" placeholder="Enter Machine No." style="flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none;" oninput="autoSave()">
         </div>
     </div>
 </div>
@@ -751,7 +751,7 @@
         {label: "SURVEY INFORMATION", isHeader: true},
         {label: "Surveyor Name", value: sName},
         {label: "Machine Model", value: mModel},
-        {label: "Excavator No.", value: mNo},
+        {label: "Machine No.", value: mNo},
         {
     label: "Date", 
     value: new Date().toLocaleDateString('en-GB', { 
@@ -796,7 +796,7 @@ function exportReport2() {
         {label: "SURVEY INFORMATION", isHeader: true},
         {label: "Surveyor Name", value: sName},
         {label: "Machine Model", value: mModel},
-        {label: "Excavator No.", value: mNo},
+        {label: "Machine No.", value: mNo},
         {
     label: "Date", 
     value: new Date().toLocaleDateString('en-GB', { 
