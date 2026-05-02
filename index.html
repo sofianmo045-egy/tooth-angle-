@@ -214,9 +214,9 @@
         <div class="group">
             <span class="group-title"><span class="id-badge">BT</span> BOOM PIN PORTSIDE</span>
             <div class="input-row">
-                <div class="input-col"><label>Xp</label><input type="number" step="0.001" id="Xp" class="saveable" oninput="autoSave()"></div>
-                <div class="input-col"><label>Yp</label><input type="number" step="0.001" id="Yp" class="saveable" oninput="autoSave()"></div>
-                <div class="input-col"><label>Zp</label><input type="number" step="0.001" id="Zp" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Xt</label><input type="number" step="0.001" id="Xt" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Yt</label><input type="number" step="0.001" id="Yt" class="saveable" oninput="autoSave()"></div>
+                <div class="input-col"><label>Zt</label><input type="number" step="0.001" id="Zt" class="saveable" oninput="autoSave()"></div>
             </div>
         </div>
 
@@ -254,9 +254,9 @@
 
     <div id="tab-calibration" class="tab-content">
         <div class="main-container">
-            <div class="input-block"><span class="block-label" style="color:var(--pds-orange)"><span class="id-badge">BT/BS</span> Boom Pin Center (Auto-sync)</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable" step="0.001"></div></div></div>
+            <div class="input-block"><span class="block-label" style="color:var(--pds-orange)"><span class="id-badge">BT/BS</span> Boom Pin Center (Auto-sync)</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bo" class="saveable" step="0.001"></div><div class="input-col"><label>Y</label><input type="number" id="y_bo" class="saveable" step="0.001"></div><div class="input-col"><label>Z</label><input type="number" id="z_bo" class="saveable" step="0.001"></div></div></div>
             <div class="input-block"><span class="block-label"><span class="id-badge">ST</span> Stick Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_st" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_st" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
-            <div class="input-block"><span class="block-label"><span class="id-badge">BP</span> Bucket Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bu" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_bu" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_bu" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
+            <div class="input-block"><span class="block-label"><span class="id-badge">BP</span> Bucket Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_bp" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_bp" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_bp" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
             <div class="input-block"><span class="block-label"><span class="id-badge">S3</span> S3 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s3" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s3" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s3" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
             <div class="input-block"><span class="block-label"><span class="id-badge">S4</span> S4 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s4" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s4" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s4" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
             <div class="input-block"><span class="block-label"><span class="id-badge">S5</span> S5 Pin</span><div class="input-row"><div class="input-col"><label>X</label><input type="number" id="x_s5" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Y</label><input type="number" id="y_s5" class="saveable" step="0.001" oninput="autoSave()"></div><div class="input-col"><label>Z</label><input type="number" id="z_s5" class="saveable" step="0.001" oninput="autoSave()"></div></div></div>
@@ -414,10 +414,10 @@
                 'A1': ['X1', 'Y1', 'Z1'],
                 'A2': ['X2', 'Y2', 'Z2'],
                 'BS': ['Xs', 'Ys', 'Zs'],
-                'BT': ['Xp', 'Yp', 'Zp'],
+                'BT': ['Xt', 'Yt', 'Zt'],
                 'BU': ['Xb', 'Yb', 'Zb'],
                 'ST': ['x_st', 'y_st', 'z_st'],
-                'BP': ['x_bu', 'y_bu', 'z_bu'],
+                'BP': ['x_bp', 'y_bp', 'z_bp'],
                 'S3': ['x_s3', 'y_s3', 'z_s3'],
                 'S4': ['x_s4', 'y_s4', 'z_s4'],
                 'S5': ['x_s5', 'y_s5', 'z_s5'],
@@ -437,11 +437,11 @@
                 }
             });
 
-            const xs = getV('Xs'), ys = getV('Ys'), zs = getV('Zs'), xp = getV('Xp'), yp = getV('Yp'), zp = getV('Zp');
-            if (xs !== null && xp !== null) {
-                document.getElementById('x_bp').value = ((xs+xp)/2).toFixed(3);
-                document.getElementById('y_bp').value = ((ys+yp)/2).toFixed(3);
-                document.getElementById('z_bp').value = ((zs+zp)/2).toFixed(3);
+            const xs = getV('Xs'), ys = getV('Ys'), zs = getV('Zs'), xt = getV('Xt'), yt = getV('Yt'), zt = getV('Zt');
+            if (xs !== null && xt !== null) {
+                document.getElementById('x_bo').value = ((xs+xt)/2).toFixed(3);
+                document.getElementById('y_bo').value = ((ys+yt)/2).toFixed(3);
+                document.getElementById('z_bo').value = ((zs+zt)/2).toFixed(3);
             }
 
             alert(`Imported ${matchCount} points successfully.`);
@@ -561,37 +561,37 @@
     }
 
     function calcCalibration() {
-        const BP = getP('bp'), ST = getP('st'), BU = getP('bu'), S3 = getP('s3'), S4 = getP('s4'), S5 = getP('s5'), T1 = getP('t1');
-        const s1 = (ST && BU) ? dist3D(ST, BU) : null;
+        const Bo = getP('bo'), ST = getP('st'), BP = getP('bp'), S3 = getP('s3'), S4 = getP('s4'), S5 = getP('s5'), T1 = getP('t1');
+        const s1 = (ST && BP) ? dist3D(ST, BP) : null;
         let s3_val = null, s2_val = null, t6_val = null, bsv = null;
 
         if (BP && ST) bsv = ST.z - BP.z;
         if (s1 && S3) {
-            const v_st_bu = { x: BU.x - ST.x, y: BU.y - ST.y, z: BU.z - ST.z };
+            const v_st_bp = { x: BP.x - ST.x, y: BP.y - ST.y, z: BP.z - ST.z };
             const v_st_s3 = { x: S3.x - ST.x, y: S3.y - ST.y, z: S3.z - ST.z };
-            const cp = { x: v_st_s3.y * v_st_bu.z - v_st_s3.z * v_st_bu.y, y: v_st_s3.z * v_st_bu.x - v_st_s3.x * v_st_bu.z, z: v_st_s3.x * v_st_bu.y - v_st_s3.y * v_st_bu.x };
+            const cp = { x: v_st_s3.y * v_st_bp.z - v_st_s3.z * v_st_bp.y, y: v_st_s3.z * v_st_bp.x - v_st_s3.x * v_st_bp.z, z: v_st_s3.x * v_st_bp.y - v_st_s3.y * v_st_bp.x };
             s3_val = Math.sqrt(cp.x**2 + cp.y**2 + cp.z**2) / s1;
-            const v_bu_st = { x: ST.x - BU.x, y: ST.y - BU.y, z: ST.z - BU.z };
-            const v_bu_s3 = { x: S3.x - BU.x, y: S3.y - BU.y, z: S3.z - BU.z };
-            s2_val = (v_bu_s3.x * v_bu_st.x + v_bu_s3.y * v_bu_st.y + v_bu_s3.z * v_bu_st.z) / s1; 
+            const v_bp_st = { x: ST.x - BP.x, y: ST.y - BP.y, z: ST.z - BP.z };
+            const v_bp_s3 = { x: S3.x - BP.x, y: S3.y - BP.y, z: S3.z - BP.z };
+            s2_val = (v_bp_s3.x * v_bp_st.x + v_bp_s3.y * v_bp_st.y + v_bp_s3.z * v_bp_st.z) / s1; 
         }
-        if (T1 && BU && S5) {
-            const vT1 = { x: T1.x - BU.x, y: T1.y - BU.y, z: T1.z - BU.z };
-            const vS5 = { x: S5.x - BU.x, y: S5.y - BU.y, z: S5.z - BU.z };
+        if (T1 && BP && S5) {
+            const vT1 = { x: T1.x - BP.x, y: T1.y - BP.y, z: T1.z - BP.z };
+            const vS5 = { x: S5.x - BP.x, y: S5.y - BP.y, z: S5.z - BP.z };
             const m1 = Math.sqrt(vT1.x**2 + vT1.y**2 + vT1.z**2), m2 = Math.sqrt(vS5.x**2 + vS5.y**2 + vS5.z**2);
             if (m1 > 0 && m2 > 0) t6_val = Math.acos(Math.max(-1, Math.min(1, (vT1.x * vS5.x + vT1.y * vS5.y + vT1.z * vS5.z) / (m1 * m2)))) * (180 / Math.PI);
         }
 
         const res = {
-            'out-boomL_cal': format(dist3D(BP, ST), " m"),
+            'out-boomL_cal': format(dist3D(BO, ST), " m"),
             'out-stickL_cal': format(s1, " m"),
             'out-bsv': format(bsv, " m"),
             'out-s2': format(s2_val, " m"),
             'out-s3': format(s3_val, " m"),
             'out-s4': format(dist3D(S3, S4), " m"),
             'out-s5': format(dist3D(S4, S5), " m"),
-            'out-ts': format(dist3D(BU, S5), " m"), 
-            'out-t1': format(dist3D(T1, BU), " m"), 
+            'out-ts': format(dist3D(BP, S5), " m"), 
+            'out-t1': format(dist3D(T1, BP), " m"), 
             'out-t6': format(t6_val, "°")
         };
 
