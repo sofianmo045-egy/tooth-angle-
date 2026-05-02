@@ -686,45 +686,79 @@
     }
 
     function exportReport1() {
-        const rows = [
-            {label: "Geometry Summary", isHeader: true},
-            {label: "Machine Heading", value: document.getElementById('out-mH').innerText},
-            {label: "Antenna Heading", value: document.getElementById('out-antH').innerText},
-            {label: "Heading Correction", value: document.getElementById('out-hC').innerText},
-            {label: "Antenna H-Distance", value: document.getElementById('out-antDist').innerText},
-            {label: "Antenna 1 Offsets", isHeader: true},
-            {label: "Forward (Y)", value: document.getElementById('out-a1F').innerText},
-            {label: "Starboard (X)", value: document.getElementById('out-a1S').innerText},
-            {label: "Up (Z)", value: document.getElementById('out-a1U').innerText},
-            {label: "Antenna 2 Offsets", isHeader: true},
-            {label: "Forward (Y)", value: document.getElementById('out-a2F').innerText},
-            {label: "Starboard (X)", value: document.getElementById('out-a2S').innerText},
-            {label: "Up (Z)", value: document.getElementById('out-a2U').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport("Excavator Geometry Report", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Geometry_Report.html'; link.click();
-    }
+    // Get Surveyor and Machine info
+    const sName = document.getElementById('surveyor_name').value || "N/A";
+    const mModel = document.getElementById('machine_model').value || "N/A";
+    const mNo = document.getElementById('machine_no').value || "N/A";
 
-    function exportReport2() {
-        const rows = [
-            {label: "Geometry Lengths", isHeader: true},
-            {label: "Boom Length", value: document.getElementById('out-boomL_cal').innerText},
-            {label: "Stick Length", value: document.getElementById('out-stickL_cal').innerText},
-            {label: "Boom Stick V (ΔZ)", value: document.getElementById('out-bsv').innerText},
-            {label: "Lever Attachment", isHeader: true},
-            {label: "S2 Offset", value: document.getElementById('out-s2').innerText},
-            {label: "S3 Offset", value: document.getElementById('out-s3').innerText},
-            {label: "S4 Offset", value: document.getElementById('out-s4').innerText},
-            {label: "S5 Offset", value: document.getElementById('out-s5').innerText},
-            {label: "Bucket & Teeth", isHeader: true},
-            {label: "T5 Separation", value: document.getElementById('out-ts').innerText},
-            {label: "T1 Tooth Length", value: document.getElementById('out-t1').innerText},
-            {label: "T6 Tooth Angle", value: document.getElementById('out-t6').innerText}
-        ];
-        const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'Crane_Config_Report.html'; link.click();
-    }
-</script>
+    const rows = [
+        {label: "SURVEY INFORMATION", isHeader: true},
+        {label: "Surveyor Name", value: sName},
+        {label: "Machine Model", value: mModel},
+        {label: "Excavator No.", value: mNo},
+        {label: "Date", value: new Date().toLocaleDateString()},
+        
+        {label: "GEOMETRY SUMMARY", isHeader: true},
+        {label: "Machine Heading", value: document.getElementById('out-mH').innerText},
+        {label: "Antenna Heading", value: document.getElementById('out-antH').innerText},
+        {label: "Heading Correction", value: document.getElementById('out-hC').innerText},
+        {label: "Antenna H-Distance", value: document.getElementById('out-antDist').innerText},
+        
+        {label: "Antenna 1 Offsets", isHeader: true},
+        {label: "Forward (Y)", value: document.getElementById('out-a1F').innerText},
+        {label: "Starboard (X)", value: document.getElementById('out-a1S').innerText},
+        {label: "Up (Z)", value: document.getElementById('out-a1U').innerText},
+        
+        {label: "Antenna 2 Offsets", isHeader: true},
+        {label: "Forward (Y)", value: document.getElementById('out-a2F').innerText},
+        {label: "Starboard (X)", value: document.getElementById('out-a2S').innerText},
+        {label: "Up (Z)", value: document.getElementById('out-a2U').innerText}
+    ];
+
+    const blob = new Blob([generateHTMLReport("Excavator Geometry Report", rows)], {type: 'text/html'});
+    const link = document.createElement('a'); 
+    link.href = URL.createObjectURL(blob); 
+    link.download = `Geometry_Report_${mNo}.html`; 
+    link.click();
+}
+
+function exportReport2() {
+    // Get Surveyor and Machine info
+    const sName = document.getElementById('surveyor_name').value || "N/A";
+    const mModel = document.getElementById('machine_model').value || "N/A";
+    const mNo = document.getElementById('machine_no').value || "N/A";
+
+    const rows = [
+        {label: "SURVEY INFORMATION", isHeader: true},
+        {label: "Surveyor Name", value: sName},
+        {label: "Machine Model", value: mModel},
+        {label: "Excavator No.", value: mNo},
+        {label: "Date", value: new Date().toLocaleDateString()},
+
+        {label: "GEOMETRY LENGTHS", isHeader: true},
+        {label: "Boom Length", value: document.getElementById('out-boomL_cal').innerText},
+        {label: "Stick Length", value: document.getElementById('out-stickL_cal').innerText},
+        {label: "Boom Stick V (ΔZ)", value: document.getElementById('out-bsv').innerText},
+        
+        {label: "LEVER ATTACHMENT", isHeader: true},
+        {label: "S2 Offset", value: document.getElementById('out-s2').innerText},
+        {label: "S3 Offset", value: document.getElementById('out-s3').innerText},
+        {label: "S4 Offset", value: document.getElementById('out-s4').innerText},
+        {label: "S5 Offset", value: document.getElementById('out-s5').innerText},
+        
+        {label: "BUCKET & TEETH", isHeader: true},
+        {label: "T5 Separation", value: document.getElementById('out-ts').innerText},
+        {label: "T1 Tooth Length", value: document.getElementById('out-t1').innerText},
+        {label: "T6 Tooth Angle", value: document.getElementById('out-t6').innerText}
+    ];
+
+    const blob = new Blob([generateHTMLReport("Crane Configuration Report", rows)], {type: 'text/html'});
+    const link = document.createElement('a'); 
+    link.href = URL.createObjectURL(blob); 
+    link.download = `Crane_Config_${mNo}.html`; 
+    link.click();
+}
+    </script>
 
     <script>
     // 1. Splash Screen Display Logic
